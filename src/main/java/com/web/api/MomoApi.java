@@ -46,8 +46,8 @@ public class MomoApi {
             throw new MessageException("Khóa học đã hết hạn đăng ký");
         }
 
-        if(course.getIsFree() != null){
-            if (course.getIsFree() == true){
+        if(course.getIsfree() != null){
+            if (course.getIsfree() == true){
                 User user = userUtils.getUserWithAuthority();
                 CourseUser courseUser = new CourseUser();
                 courseUser.setCourse(course);

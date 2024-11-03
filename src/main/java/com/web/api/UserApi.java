@@ -184,6 +184,16 @@ public class UserApi {
         return userUtils.getUserWithAuthority();
     }
 
+    @GetMapping("/teacher/logged")
+    public User getUserLogged_tc(){
+        return userUtils.getUserWithAuthority();
+    }
+
+    @PostMapping("/teacher/update-account")
+    public User updateteacher(@RequestBody User user){
+        return userService.updateUser(user);
+    }
+
     @PostMapping("/user/update-account")
     public User updateUser(@RequestBody User user){
         return userService.updateUser(user);

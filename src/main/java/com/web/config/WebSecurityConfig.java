@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/admin/**").hasAuthority(Contains.ROLE_ADMIN)
                 .antMatchers("/api/user/**").hasAuthority(Contains.ROLE_USER)
+                .antMatchers("/api/user/user-logged").hasAuthority(Contains.ROLE_TEACHER)
                 .antMatchers("/api/urlpayment").hasAuthority(Contains.ROLE_USER)
                 .and()
                 .apply(securityConfigurerAdapter());

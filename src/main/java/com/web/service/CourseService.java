@@ -53,9 +53,25 @@ public class CourseService {
     }
 
     public List<Course> findAll() {
-        List<Course> result = courseRepository.findAll();
+        List<Course> result = courseRepository.findAllByOrderByCreatedDateDesc();
         result.forEach(p->{
             p.setNumUser(p.getCourseUsers().size());
+        });
+        return result;
+    }
+
+    public Page<Course> findCourseFree(Pageable pageable) {
+        Page<Course> result = courseRepository.findByIsfreeTrue(pageable);
+        result.forEach(course -> {
+            course.setNumUser(course.getCourseUsers().size());
+        });
+        return result;
+    }
+
+    public Page<Course> findCourseNotFree(Pageable pageable) {
+        Page<Course> result = courseRepository.findByIsfreeFalse(pageable);
+        result.forEach(course -> {
+            course.setNumUser(course.getCourseUsers().size());
         });
         return result;
     }

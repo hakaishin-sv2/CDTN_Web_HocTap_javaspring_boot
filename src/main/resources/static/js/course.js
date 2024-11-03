@@ -1,12 +1,14 @@
-var size = 3;
+var size = 9;
 
 async function loadKhoaHoc(page) {
-    var url = 'http://localhost:8080/api/course/public/find-all-page?page=' + page + '&size=' + size+'&sort=id,desc';
+    var url = 'http://localhost:8080/api/course/public/courses?type='  + '&page=' + page + '&size=' + size + '&sort=id,desc';
     const response = await fetch(url, {
     });
     var result = await response.json();
     console.log(result);
     var list = result.content;
+    // var list = result;
+    document.getElementById("listkhoahoc").innerHTML="";
     var main = '';
     for (i = 0; i < list.length; i++) {
         main += `<div class="col-sm-4">

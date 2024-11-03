@@ -47,7 +47,9 @@ public class Course {
 
     private Date endDate;
 
-    private Boolean isFree = false;
+    private Date createdDate ;
+
+    private Boolean isfree = false;
 
     @ManyToOne
     @JoinColumn(name = "teacher")

@@ -31,9 +31,22 @@ public class CourseApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/public/find-all-page")
-    public ResponseEntity<?> findAll(Pageable pageable){
-        Page<Course> result = courseService.findByStartDate(pageable);
+    @GetMapping("/public/courses")
+    public ResponseEntity<?> findCourses(@RequestParam(required = false) String type, Pageable pageable) {
+        Page<Course> result;
+
+        switch (type) {
+            case "free":
+                result = courseService.findCourseFree(pageable);
+                break;
+            case "paid":
+                result = courseService.findCourseNotFree(pageable);
+                break;
+            default:
+                result = courseService.findByStartDate(pageable);
+                break;
+        }
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

@@ -1,6 +1,7 @@
 package com.web.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.web.enums.UserType;
@@ -27,7 +28,7 @@ public class User{
     private String username;
 
     private String email;
-
+    @JsonIgnore
     private String password;
 
     private String fullName;

@@ -15,4 +15,6 @@ public interface UnitUserRepository extends JpaRepository<UnitUser, Long> {
 
     @Query("select u from UnitUser u where u.user.id = ?1 and u.unit.id = ?2")
     Optional<UnitUser> findByUserAndUnit(Long userId, Long unitId);
+
+    void deleteByUnit_Id(Long unitId);
 }

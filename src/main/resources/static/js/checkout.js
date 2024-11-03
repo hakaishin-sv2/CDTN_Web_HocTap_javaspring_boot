@@ -30,7 +30,7 @@ async function requestPayMentMomo() {
                 text: "Đã đăng ký khóa học miễn phí thành công!",
                 type: "success"
             }, function() {
-                window.location.href = 'taikhoan'
+                window.location.href = 'taikhoan#mycourse'
             });
         }
     }

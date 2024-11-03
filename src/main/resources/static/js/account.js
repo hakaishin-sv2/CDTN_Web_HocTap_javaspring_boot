@@ -196,6 +196,7 @@ async function loadThongTinTkCheckout(){
         })
     });
     var result = await response.json();
+    console.log(response);
     document.getElementById("fullname").value = result.fullName
     document.getElementById("phone").value = result.phone
     document.getElementById("emaildangky").value = result.email
@@ -232,7 +233,48 @@ async function capNhatThongTin() {
 }
 
 
-async function loadThongTinTaiKhoan(){
+
+
+
+
+
+async function capNhatThongTinteacher() {
+    var imgElement = document.getElementById("btnchange");
+    var backgroundImage = imgElement.style.backgroundImage;
+
+// Loại bỏ phần `url("...")` để chỉ lấy đường link
+    var url = backgroundImage.slice(5, -2);
+    var avatar = url;
+    var user = {
+        "fullName": document.getElementById("fullname").value,
+        "email": document.getElementById("email").value,
+        "phone": document.getElementById("phone").value,
+        "avatar": avatar,
+    }
+    const response = await fetch('http://localhost:8080/api/teacher/update-account', {
+        method: 'POST',
+        headers: new Headers({
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(user)
+    });
+    var result = await response.json();
+    if (response.status < 300) {
+        swal({
+                title: "Thông báo",
+                text: "Cập nhât tài khoản thành công! test",
+                type: "success"
+            },
+            function() {
+                window.location.reload();
+            });
+    }
+    if (response.status == exceptionCode) {
+        toastr.warning(result.defaultMessage);
+    }
+}
+async function loadThongTinTaiKhoan() {
     const response = await fetch('http://localhost:8080/api/user/user-logged', {
         method: 'POST',
         headers: new Headers({
@@ -240,12 +282,42 @@ async function loadThongTinTaiKhoan(){
         })
     });
     var result = await response.json();
-    document.getElementById("fullname").value = result.fullName
-    document.getElementById("phone").value = result.phone
-    document.getElementById("email").value = result.email
-    document.getElementById("btnchange").style.backgroundImage = `url(${result.avatar})`
-}
+    console.log(result);
 
+    // Gán giá trị cho các trường thông tin
+    document.getElementById("fullname").value = result.fullName;
+    document.getElementById("phone").value = result.phone;
+    document.getElementById("email").value = result.email;
+
+    // Thay đổi ảnh nền của nút
+    var img = document.getElementById("btnchange");
+    img.style.backgroundImage = `url(${result.avatar})`;
+    img.style.backgroundSize = 'cover'; // Đảm bảo ảnh phủ kín
+    img.style.backgroundPosition = 'center'; // Đảm bảo ảnh căn giữa
+    img.style.backgroundRepeat = 'no-repeat'; // Không lặp lại ảnh
+}
+async function loadThongTinTaiKhoan_teacher() {
+    const response = await fetch('http://localhost:8080/api/teacher/logged', {
+        method: 'GET',
+        headers: new Headers({
+            'Authorization': 'Bearer ' + token
+        })
+    });
+    var result = await response.json();
+    console.log(result);
+
+    // Gán giá trị cho các trường thông tin
+    document.getElementById("fullname").value = result.fullName;
+    document.getElementById("phone").value = result.phone;
+    document.getElementById("email").value = result.email;
+
+    // Thay đổi ảnh nền của nút
+    var img = document.getElementById("btnchange");
+    img.style.backgroundImage = `url(${result.avatar})`;
+    img.style.backgroundSize = 'cover'; // Đảm bảo ảnh phủ kín
+    img.style.backgroundPosition = 'center'; // Đảm bảo ảnh căn giữa
+    img.style.backgroundRepeat = 'no-repeat'; // Không lặp lại ảnh
+}
 async function changeAvatar(){
     
     const filePath = document.getElementById('fileanhdaidientl')

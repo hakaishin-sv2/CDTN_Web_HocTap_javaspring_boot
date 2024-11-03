@@ -33,6 +33,7 @@ async function loadDanhMucTimKhoaHoc() {
     const response = await fetch(url, {
     });
     var list = await response.json();
+    console.log(list)
     var uls = new URL(document.URL)
     var danhmuc = uls.searchParams.get("danhmuc");
     var main = `<li class="nav-item w-auto">

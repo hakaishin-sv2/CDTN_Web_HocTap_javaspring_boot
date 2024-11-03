@@ -1,7 +1,15 @@
-.logoheader{
-    width: auto;
-    height: 35px;
+.logoheader {
+    width: 100px; /* Tăng chiều rộng để hiển thị rõ hơn */
+    height: auto; /* Để tự động điều chỉnh chiều cao theo tỷ lệ */
+    margin-left: 10px; /* Tạo khoảng cách nhỏ bên trái */
 }
+
+.header-logo-wrapper {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 5px; /* Tạo thêm khoảng trống xung quanh */
+}
+
 .listdmheader{
     list-style: none;
     height: 60px !important;
@@ -159,10 +167,13 @@
     padding-left: 1rem;
     padding-right: 1rem;
 }
-.imgkh{
+.imgkh {
     width: 100%;
-    height: 200px; object-fit: cover;
+    height: 300px;
+    object-fit: cover;
+    object-position: center; /* Căn giữa ảnh */
 }
+
 .singlecourse{
     background-color: #fff;
     padding: 1rem;
@@ -459,11 +470,14 @@
     display: block;
     font-weight: 500;
 }
-.bannercourse{
+.bannercourse {
     height: 300px;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: cover; /* Đảm bảo hình ảnh phủ kín và cắt để giữ tỷ lệ */
+    background-position: center center; /* Căn giữa hình ảnh */
+    background-attachment: fixed; /* Giữ hình ảnh cố định khi cuộn (tuỳ chọn) */
 }
+
 .contentfirstcourse{
     width: 100%;
     height: 100%;

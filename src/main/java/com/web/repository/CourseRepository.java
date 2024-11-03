@@ -26,4 +26,9 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("select c from Course c where c.startDate >= ?1 and c.name like ?2 and c.category.id = ?3")
     public Page<Course> searchCourse(Date currentDate, String param, Long categoryId, Pageable pageable);
+
+    List<Course> findAllByOrderByCreatedDateDesc();
+
+    Page<Course> findByIsfreeTrue(Pageable pageable); // Phân trang cho khóa học miễn phí
+    Page<Course> findByIsfreeFalse(Pageable pageable); // Phân trang cho khóa học có phí
 }

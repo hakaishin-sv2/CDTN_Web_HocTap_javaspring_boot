@@ -54,6 +54,32 @@ async function loadUnitById(id) {
     document.getElementById("tieudechao").style.display = 'none'
     document.getElementById("noidungbaihoc").style.display = 'block'
     document.getElementById("linkvideo").innerHTML = `<source id="linkvideos" src="${result.video}" type="video/mp4">`
+    let iconClass = 'fa fa-file'; // Mặc định là biểu tượng tệp
+    let linkHtml = ''; // Khởi tạo biến cho liên kết tài liệu học
+
+// Kiểm tra xem learning_material có null hoặc là chuỗi rỗng không
+    if (result.learning_material && result.learning_material.trim() !== '') {
+        // Xác định lớp biểu tượng dựa trên loại tài liệu
+        if (result.learning_material.endsWith('.pdf')) {
+            iconClass = 'fa fa-file-pdf';
+        } else if (result.learning_material.endsWith('.docx')) {
+            iconClass = 'fa fa-file-word';
+        }
+
+        // Tạo HTML cho liên kết tài liệu học
+        linkHtml = `<a href="${result.learning_material}" target="_blank" title="Xem tài liệu học tập">
+        <i class="${iconClass} fa-3x icontable" aria-hidden="true"></i> Tải tài liệu học
+    </a>`;
+    }
+
+// Cập nhật nội dung tài liệu học, nếu có
+    if (linkHtml) {
+        document.getElementById("tailiauhoc").innerHTML = linkHtml;
+    } else {
+        // Nếu không có tài liệu, bạn có thể ẩn hoặc giữ nội dung trống
+        document.getElementById("tailiauhoc").innerHTML = ''; // Hoặc thực hiện thao tác khác nếu cần
+    }
+
     document.getElementById("contentbaihoc").innerHTML = `<h4 style="margin-top:40px">Nội dung bài học</h4><br>`+result.content
     var milisecond = result.minStudyTime * 60 * 1000;
 

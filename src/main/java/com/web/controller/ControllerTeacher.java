@@ -49,4 +49,9 @@ public class ControllerTeacher {
     }
 
 
+    @RequestMapping(value = {"/thongtincanhan"}, method = RequestMethod.GET)
+    public String taikhoan() {
+        return "teacher/taikhoan.html";
+    }
+
 }
