@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.relational.core.sql.In;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,4 +42,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("SELECT u FROM User u WHERE u.actived = ?1 AND u.authorities = ?2")
     List<User> findByActivedAndAuthorityName(boolean actived, Authority authorityName);
+
+
+    // Lấy thong tin của các user chưa nằm trong khóa học hiện tại
+    @Query("SELECT u FROM User u WHERE u.authorities.name = 'ROLE_USER' AND u.id NOT IN (SELECT cu.user.id FROM CourseUser cu WHERE cu.course.id = :courseId)")
+    List<User> findUsersNotInCourseUserByCourseId(@Param("courseId") Long courseId);
 }

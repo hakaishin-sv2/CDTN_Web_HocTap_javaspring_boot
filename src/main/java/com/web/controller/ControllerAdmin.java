@@ -86,4 +86,9 @@ public class ControllerAdmin {
     public String taochungchi() {
         return "admin/taochungchi";
     }
+
+    @RequestMapping(value = {"/addthanhvien"}, method = RequestMethod.GET)
+    public String addhocvien() {
+        return "admin/addthanhvien";
+    }
 }

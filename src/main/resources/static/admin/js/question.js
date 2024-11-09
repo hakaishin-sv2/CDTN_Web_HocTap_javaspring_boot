@@ -2,17 +2,24 @@ async function loadQuestion() {
     var uls = new URL(document.URL)
     var id = uls.searchParams.get("exam");
     $('#example').DataTable().destroy();
-    var url = 'http://localhost:8080/api/question/public/find-by-lesson?id='+id;
+    var url = 'http://localhost:8080/api/question/public/find-by-lesson?id=' + id;
     const response = await fetch(url, {
         method: 'GET'
     });
-    var list = await response.json();
+    var temp = await response.json();
+
+    var list = temp.sort((a, b) => b.id - a.id); // Sắp xếp theo id giảm dần
+    console.log("Sorted list:", list);
+
     var main = '';
-    for (i = 0; i < list.length; i++) {
-        var ctl = ''
-        for(j=0; j<list[i].answers.length; j++){
-            ctl += `<span><i onclick="loadAAnsewr(${list[i].answers[j].id}, ${list[i].id})" data-bs-toggle="modal" data-bs-target="#addcautl" class="fa fa-edit iconctl"></i>
-            <i onclick="deleteAnw(${list[i].answers[j].id})" class="fa fa-trash iconctl"></i>${list[i].answers[j].title} ${list[i].answers[j].isTrue == true? '<span class="icontrue"> - true</span>':''} </span><br><br>`
+    for (let i = 0; i < list.length; i++) {
+        var ctl = '';
+        for (let j = 0; j < list[i].answers.length; j++) {
+            ctl += `<span>
+                <i title="Xóa đáp án" onclick="loadAAnsewr(${list[i].answers[j].id}, ${list[i].id})" data-bs-toggle="modal" data-bs-target="#addcautl" class="fa fa-edit iconctl"></i>
+                <i title="Sửa đáp án" onclick="deleteAnw(${list[i].answers[j].id})" class="fa fa-trash iconctl"></i>${list[i].answers[j].title}
+                ${list[i].answers[j].isTrue ? '<span class="icontrue"> - true</span>' : ''}
+            </span><br><br>`;
         }
         main += `<tr>
                     <td>${list[i].id}</td>
@@ -21,15 +28,20 @@ async function loadQuestion() {
                     <td>${list[i].lesson.exam.name}</td>
                     <td>${ctl}</td>
                     <td class="sticky-col">
-                        <i onclick="deleteQuestion(${list[i].id})" class="fa fa-trash-alt iconaction"></i>
-                        <a data-bs-toggle="modal" data-bs-target="#addtk" href="#" onclick="loadAQuestion(${list[i].id})"><i class="fa fa-edit iconaction"></i></a>
-                        <a onclick="setIdQuestion(${list[i].id})" data-bs-toggle="modal" data-bs-target="#addcautl" href="#"><i class="fa fa-plus iconaction"></i></a>
+                        <i title="Xóa" onclick="deleteQuestion(${list[i].id})" class="fa fa-trash-alt iconaction"></i>
+                        <a title="Cập nhật" data-bs-toggle="modal" data-bs-target="#addtk" href="#" onclick="loadAQuestion(${list[i].id})"><i class="fa fa-edit iconaction"></i></a>
+                        <a title="Thêm câu hỏi" onclick="setIdQuestion(${list[i].id})" data-bs-toggle="modal" data-bs-target="#addcautl" href="#"><i class="fa fa-plus iconaction"></i></a>
                     </td>
-                </tr>`
+                </tr>`;
     }
-    document.getElementById("listQuestion").innerHTML = main
-    $('#example').DataTable();
+
+    document.getElementById("listQuestion").innerHTML = main;
+
+    $('#example').DataTable({
+        ordering: false // Tắt sắp xếp tự động của DataTable
+    });
 }
+
 
 function clearDataCauHoi(){
     document.getElementById("idcauhoi").value = ""

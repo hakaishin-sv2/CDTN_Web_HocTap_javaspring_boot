@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -44,9 +45,19 @@ public class BlogApi {
     @GetMapping("/public/findAll")
     public ResponseEntity<?> findAll(@RequestParam(value = "search", required = false) String search,Pageable pageable){
         Page<Blog> result = blogService.findAll(search,pageable);
+       // Page<Blog> result = blogService.findAll(search,pageable);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
-
+//    @GetMapping("/public/findAll")
+//    public ResponseEntity<String> crawlBlogs() {
+//        try {
+//            blogService.crawl();
+//            return ResponseEntity.ok("Crawl completed successfully!");
+//        } catch (IOException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Error occurred while crawling: " + e.getMessage());
+//        }
+//    }
     @GetMapping("/public/findAllList")
     public ResponseEntity<?> findAllList(){
         List<Blog> result = blogService.findAll();

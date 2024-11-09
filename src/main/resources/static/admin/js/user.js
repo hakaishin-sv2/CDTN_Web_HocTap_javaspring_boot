@@ -38,6 +38,75 @@ async function loadAllUser() {
     $('#example').DataTable();
 }
 
+async function loadAllUserNotInCourse() {
+    $('#example').DataTable().destroy(); // Xóa DataTable cũ trước khi tạo mới
+    var courseId = window.location.search.split('=')[1]; // Lấy course ID từ URL
+    var url = `http://localhost:8080/api/admin/user-not-in-course/${courseId}`;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: new Headers({
+            'Authorization': 'Bearer ' + token
+        })
+    });
+
+    var list = await response.json();
+    console.log(list);
+    var main = '';
+
+    for (let i = 0; i < list.length; i++) {
+        var phone = list[i].phone == null ? "" : list[i].phone;
+        var fullName = list[i].fullName == null ? "" : list[i].fullName;
+
+        main += `<tr>
+                    <td><input type="checkbox" class="userCheckbox" value="${list[i].id}"></td>
+                    <td>${list[i].id}</td>
+                    <td>${list[i].username}</td>
+                    <td>${fullName}</td>
+                    <td>${phone}</td>
+                    <td>${list[i].createdDate}</td>
+                    <td>${list[i].authorities.name}</td>
+                    <td>
+                        <button class="btn btn-success" onclick="addUserToCourse(${list[i].id}, ${courseId})">Add User</button>
+                    </td>
+                </tr>`;
+    }
+
+    document.getElementById("listuser").innerHTML = main;
+    $('#example').DataTable(); // Tạo lại DataTable mới
+}
+
+// Hàm để thêm user vào khóa học
+async function addUserToCourse(userId, courseId) {
+    var courseId = window.location.search.split('=')[1];
+    var url = `http://localhost:8080/api/course/admin/${courseId}/add-user/${userId}`;
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (response.ok) {
+        Swal.fire({
+            title: "Thông báo",
+            text: "User đã được thêm vào khóa học thành công!",
+            icon: "success",
+            confirmButtonText: "OK"
+        }).then(() => {
+            console.log("Reloading the page...");
+            window.location.href = '/admin/addthanhvien?id=' + courseId;
+        });
+    } else {
+        Swal.fire({
+            title: "Thông báo",
+            text: "Có lỗi xảy ra khi thêm user vào khóa học.",
+            icon: "error",
+            confirmButtonText: "OK"
+        });
+    }
+}
 async function preViewImage(){
     const [file] = chooseimg.files
     if (file) {
@@ -73,23 +142,23 @@ async function lockOrUnlock(id, type) {
             mess = 'Mở khóa thành công'
         }
         swal({
-            title: "Thông báo", 
-            text: mess, 
-            type: "success"
-          },
-        function(){ 
-            window.location.reload();
-        });
+                title: "Thông báo",
+                text: mess,
+                type: "success"
+            },
+            function(){
+                window.location.reload();
+            });
     }
     else {
         swal({
-            title: "Thông báo", 
-            text: "hành động thất bại", 
-            type: "error"
-          },
-        function(){ 
-            window.location.reload();
-        });
+                title: "Thông báo",
+                text: "hành động thất bại",
+                type: "error"
+            },
+            function(){
+                window.location.reload();
+            });
     }
 }
 

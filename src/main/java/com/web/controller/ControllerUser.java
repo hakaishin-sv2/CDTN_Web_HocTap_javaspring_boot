@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
+
 public class ControllerUser {
 
     @RequestMapping(value = {"/baihoc"}, method = RequestMethod.GET)
@@ -109,5 +110,14 @@ public class ControllerUser {
     }
 
 
+    @RequestMapping(value = {"/notfound"}, method = RequestMethod.GET)
+    public String notfound() {
+        return "user/404.html";
+    }
+
+    @RequestMapping(value = {"/joinkhoahoc"}, method = RequestMethod.GET)
+    public String jhnkh() {
+        return "user/joinkhoahoc.html";
+    }
 
 }

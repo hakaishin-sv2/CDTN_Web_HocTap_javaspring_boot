@@ -6,6 +6,7 @@ async function loadChapter() {
     var response = await fetch(url, {
     });
     var result = await response.json();
+    //console.log(result)
     document.getElementById("tenkhoahoc").innerHTML = result.name
     document.getElementById("danhmuckh").innerHTML = result.category.name
     document.getElementById("imgctblog").src = result.image

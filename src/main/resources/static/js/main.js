@@ -64,17 +64,16 @@ function loadFooter(){
           <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
             <h6 class="text-uppercase fw-bold mb-4"><img src="image/logo.webp" class="imglogofooter"></h6>
             <span>
-                Công ty TNHH Công Nghệ A Plus<br>
-                Giấy chứng nhận Đăng ký doanh nghiệp số: 0109675459 do Sở Kế hoạch và Đầu tư thành phố Hà Nội cấp ngày 17/06/2021.<br>
-                Điện thoại liên hệ/Hotline: 096 369 5525<br>
-                Email: study4.team@gmail.com.<br>
-                Địa chỉ trụ sở: Số 15, Ngõ 208 Giải Phóng, Phường Phương Liệt, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+                Công ty TNHH Công Nghệ <br>
+                Giấy chứng nhận Đăng ký doanh nghiệp số: abc xyz do Sở Kế hoạch và Đầu tư thành phố Hà Nội cấp ngày 17/06/2021.<br>
+                Điện thoại liên hệ/Hotline: 0812965899<br>
+                Email: stu715105224@hnue.edu.vn.<br>                Địa chỉ trụ sở: Số 15, Ngõ 199 Giải Phóng, Phường Phương Liệt, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
             </span>
           </div>
           <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
             <h6 class="text-uppercase fw-bold mb-4">Về chúng tôi</h6>
-            <p><a href="#!" class="text-reset">Hotline: 09723748234</a></p>
-            <p><a href="#!" class="text-reset">Email: phonestore@gmail.com</a></p>
+            <p><a href="#!" class="text-reset">Hotline: 09999999</a></p>
+            <p><a href="#!" class="text-reset">Email: nguyentrongthi9779@gmail.com</a></p>
             <p><a href="#!" class="text-reset">Địa chỉ cs1: Số 1, đại cồ việt, Hai Bà Trưng, Hà nội</a></p>
             <p><a href="#!" class="text-reset">Địa chỉ cs2: Số 1, đại cồ việt, Hai Bà Trưng, Hà nội</a></p>
           </div>

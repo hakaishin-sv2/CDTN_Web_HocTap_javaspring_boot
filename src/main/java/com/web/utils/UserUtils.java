@@ -33,6 +33,7 @@ public class UserUtils implements UserDetailsService {
     }
 
     public User getUserWithAuthority(){
+        var x = SecurityUtils.getCurrentUserLogin().get();
         Long id =Long.valueOf(SecurityUtils.getCurrentUserLogin().get());
         return userRepository.findById(id).get();
     }

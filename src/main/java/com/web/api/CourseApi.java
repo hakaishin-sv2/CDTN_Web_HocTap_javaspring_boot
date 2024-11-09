@@ -4,6 +4,7 @@ import com.web.dto.UserDto;
 import com.web.entity.Course;
 import com.web.entity.Lesson;
 import com.web.service.CourseService;
+import com.web.service.CourseUserService;
 import com.web.service.UnitService;
 import com.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class CourseApi {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CourseUserService courseUserService;
     @GetMapping("/public/find-all")
     public ResponseEntity<?> findAll(){
         List<Course> result = courseService.findAll();
@@ -87,7 +90,25 @@ public class CourseApi {
         List<Course> result = courseService.findByTeacher();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @PostMapping("/admin/{courseId}/add-user/{userId}")
+    public ResponseEntity<?> addUserToCourse(@PathVariable Long courseId, @PathVariable Long userId) {
+        try {
+            courseUserService.addUserToCourse(courseId, userId);
+            return ResponseEntity.ok("User đã được thêm vào khóa học thành công");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra: " + e.getMessage());
+        }
+    }
 
+    @PostMapping("/admin/add-list-user-to-course/{userIds}")
+    public ResponseEntity<?> addlisstusertocourse(@PathVariable("userIds") List<Long> userIds,@RequestParam("courseId") Long courseId) {
+        try {
+            courseUserService.addListUsersToCourse(courseId,userIds);
+            return ResponseEntity.ok("User đã được thêm vào khóa học thành công");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra: " + e.getMessage());
+        }
+    }
 //    @GetMapping("/test")
 //    public ResponseEntity<?> addTocourse(){
 //        List<UserDto> result = userService.getlistUserByRole("ROLE_USER");

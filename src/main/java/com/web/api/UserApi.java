@@ -152,6 +152,12 @@ public class UserApi {
                 .body(result);
     }
 
+    @GetMapping("/admin/user-not-in-course/{courseId}")
+    public ResponseEntity<?> getUserNotInCourse(@PathVariable Long courseId) {
+        List<User> users = userService.findUsersNotInCourseUserByCourseId(courseId);
+        return ResponseEntity.ok(users);
+    }
+
     @PostMapping("/all/change-avatar")
     public String uploadFile(@RequestParam("file") MultipartFile file){
         try {

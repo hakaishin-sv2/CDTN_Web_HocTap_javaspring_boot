@@ -11,6 +11,7 @@ async function getAllLesson(){
     });
     var list = await response.json();
     listLesson = list;
+    console.log(listLesson)
     var main = ''
     var ind = 0
     for(i=0; i< list.length; i++){
@@ -38,12 +39,8 @@ async function getAllLesson(){
       </li>`
       maindiv += `<div class="tab-pane fade ${i>0?'':'show active'}" id="ex1-tabs-${list[i].id}" role="tabpanel" aria-labelledby="ex1-tab-${list[i].id}" >
         <div class="row">
-            <div class="col-sm-7">
-                <div class="noidungch" id="noidungds${list[i].id}">
-                    
-                </div>
-            </div>
-            <div class="col-sm-5">
+           
+            <div class="col-sm-12">
                 <div class="noidungctl" id="dscauhoi${list[i].id}">
                         
                 </div>

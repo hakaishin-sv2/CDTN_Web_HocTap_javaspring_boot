@@ -131,6 +131,7 @@ async function loadCategoryBaiThi() {
     var response = await fetch('http://localhost:8080/api/category/public/find-by-type?type=PHAN_THI', {
     });
     var list = await response.json();
+    console.log(list)
     var main = '';
     for (i = 0; i < list.length; i++) {
         main += `<option value="${list[i].id}">${list[i].name}</option>`

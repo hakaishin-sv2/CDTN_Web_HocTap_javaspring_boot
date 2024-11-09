@@ -78,25 +78,47 @@ async function loadACourse() {
         document.getElementById("listcamket").innerHTML = main
         document.getElementById("btndangkykh").onclick = function (){
             window.location.href = 'xacnhan?khoahoc='+id
+            // if(result.isfree==false){
+            //     window.location.href = 'xacnhan?khoahoc='+id
+            // }else{
+            //     window.location.href = 'joinkhoahoc'
+            // }
+
         }
     }
 }
+
 
 
 async function loadACourseCheckout() {
     var id = window.location.search.split('=')[1];
     if (id != null) {
         var url = 'http://localhost:8080/api/course/public/findById?id=' + id;
-        var response = await fetch(url, {
-        });
-        var result = await response.json();
-        console.log(result);
-        document.getElementById("tenkhoahoc").innerHTML = result.name
-        document.getElementById("thoigianhoc").innerHTML = `<strong>${result.startDate}</strong>` + ' đến ' + `<strong>${result.endDate}</strong>`
-        document.getElementById("giohoc").innerHTML = `<strong>${result.studyTime}, thứ ${result.dayOfWeek}</strong>`
-        document.getElementById("giangvien").innerHTML = `<strong>${result.teacher.fullName}</strong>`
-        document.getElementById("giamoikh").innerHTML = formatmoney(result.price)
+        try {
+            var response = await fetch(url);
 
+            if (!response.ok) {
+                if (response.status === 404) {
+                    window.location.href = '/notfound'; // Điều hướng đến trang 404
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            var result = await response.json();
+            console.log(result)
+            document.getElementById("tenkhoahoc").innerHTML = result.name;
+            document.getElementById("thoigianhoc").innerHTML = `<strong>${result.startDate}</strong>` + ' đến ' + `<strong>${result.endDate}</strong>`;
+            document.getElementById("giohoc").innerHTML = `<strong>${result.studyTime}, thứ ${result.dayOfWeek}</strong>`;
+            document.getElementById("giangvien").innerHTML = `<strong>${result.teacher.fullName}</strong>`;
+            if (result.price === null) {
+                document.getElementById("giamoikh").innerHTML = "<strong style='color: #28a745; font-size: 1.5em;'>Miễn phí</strong>";
+            } else {
+                document.getElementById("giamoikh").innerHTML = "<strong style='color: red; font-size: 1.5em;'>" + formatmoney(result.price) + "</strong>";
+            }
+
+        } catch (error) {
+            console.error('An error occurred:', error.message);
+        }
     }
 }
 

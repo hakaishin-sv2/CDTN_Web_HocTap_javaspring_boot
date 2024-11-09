@@ -19,6 +19,8 @@ async function loadCourse() {
                         <i onclick="xoaKhoaHoc(${list[i].id})" class="fa fa-trash-alt iconaction"></i>
                         <a href="addkhoahoc?id=${list[i].id}" onclick="loadACategory(${list[i].id})"><i class="fa fa-edit iconaction"></i></a>
                         <i onclick="loadDanhSachHocVien(${list[i].id})" data-bs-toggle="modal" data-bs-target="#addtk" class="fa fa-eye iconaction"></i>
+                       <a title="Add thêm thành viên" href="addthanhvien?id=${list[i].id}"><i class="fa fa-user-plus iconaction"></i></a>
+
                     </td>
                 </tr>`
     }
@@ -26,22 +28,55 @@ async function loadCourse() {
     $('#example').DataTable();
 }
 
-function checkFree(e){
-    if(e.checked == true){
+async function getInforKhoaHoc() {
+    var id = window.location.search.split('=')[1];
+    if (id != null) {
+        var url = 'http://localhost:8080/api/course/public/findById?id=' + id;
+        try {
+            var response = await fetch(url);
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    window.location.href = '/notfound'; // Điều hướng đến trang 404
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            var result = await response.json();
+            console.log(result)
+            document.getElementById("tenkhoahoc").value = result.name
+
+        } catch (error) {
+            console.error('An error occurred:', error.message);
+        }
+    }
+}
+
+function toggleSelectAll(selectAllCheckbox) {
+    // Lấy tất cả các checkbox trong bảng (trừ checkbox chính)
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#selectAllCheckbox)');
+
+    // Đặt trạng thái của các checkbox theo trạng thái của checkbox chính
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+    });
+}
+
+function checkFree(e) {
+    if (e.checked == true) {
         document.getElementById("hocphi").value = "";
-        document.getElementById("hocphi").readOnly  = true;
+        document.getElementById("hocphi").readOnly = true;
         document.getElementById("hocphicu").value = "";
         document.getElementById("hocphicu").readOnly = true;
 
-    }
-    else{
-        document.getElementById("hocphi").readOnly  = false;
+    } else {
+        document.getElementById("hocphi").readOnly = false;
         document.getElementById("hocphicu").readOnly = false;
     }
 }
 
 var linkImage = '';
 var linkBanner = '';
+
 async function saveCourse() {
     document.getElementById("loading").style.display = 'block'
     var uls = new URL(document.URL)
@@ -49,9 +84,13 @@ async function saveCourse() {
 
     var linkImagecheck = await uploadAnh(document.getElementById("anhdaidien"));
     var linkBannercheck = await uploadAnh(document.getElementById("imagebanner"));
-    if(linkImagecheck != null){linkImage = linkImagecheck}
-    if(linkBannercheck != null){linkBanner = linkBannercheck}
-    
+    if (linkImagecheck != null) {
+        linkImage = linkImagecheck
+    }
+    if (linkBannercheck != null) {
+        linkBanner = linkBannercheck
+    }
+
     var course = {
         "id": id,
         "name": document.getElementById("tenkh").value,
@@ -65,12 +104,12 @@ async function saveCourse() {
         "studyTime": document.getElementById("giohoc").value,
         "startDate": document.getElementById("tungay").value,
         "endDate": document.getElementById("denngay").value,
-        "isFree": document.getElementById("isFree").checked,
+        "isfree": document.getElementById("isFree").checked,
         "teacher": {
-            "id":document.getElementById("giangvien").value
+            "id": document.getElementById("giangvien").value
         },
         "category": {
-            "id":document.getElementById("danhmuckhoahoc").value
+            "id": document.getElementById("danhmuckhoahoc").value
         },
         "promises": listCamKet,
     }
@@ -90,7 +129,7 @@ async function saveCourse() {
                 text: "thêm/sửa khóa học thành công!",
                 type: "success"
             },
-            function() {
+            function () {
                 window.location.replace('khoahoc')
             });
     }
@@ -107,9 +146,9 @@ async function loadACourse() {
     if (id != null) {
         document.getElementById("btnthemkhoahoc").innerHTML = `<i class="fa fa-edit"></i> Cập nhật khóa học`
         var url = 'http://localhost:8080/api/course/public/findById?id=' + id;
-        var response = await fetch(url, {
-        });
+        var response = await fetch(url, {});
         var result = await response.json();
+
         console.log(result);
         document.getElementById("tenkh").value = result.name
         document.getElementById("tungay").value = result.startDate
@@ -120,10 +159,10 @@ async function loadACourse() {
         document.getElementById("denngay").value = result.endDate
         document.getElementById("giangvien").value = result.teacher.id
         document.getElementById("hocphicu").value = result.oldPrice
-        document.getElementById("isFree").checked = result.isFree
+        document.getElementById("isFree").checked = result.isfree;
 
-        if(result.isFree == true){
-            document.getElementById("hocphi").readOnly  = true;
+        if (result.isFree == true) {
+            document.getElementById("hocphi").readOnly = true;
             document.getElementById("hocphicu").readOnly = true;
         }
 
@@ -136,7 +175,7 @@ async function loadACourse() {
 
 
         var main = '';
-        for(i=0; i<result.promises.length; i++){
+        for (i = 0; i < result.promises.length; i++) {
             main += `<div class="singlebonho">
             Cam kết: ${result.promises[i].content} 
             <i onclick="xoaCamKet(${result.promises[i].id})" class="fa fa-trash iconxoabn"></i>
@@ -149,8 +188,7 @@ async function loadACourse() {
 
 async function loadACamKet(id) {
     var url = 'http://localhost:8080/api/promise/public/findById?id=' + id;
-    var response = await fetch(url, {
-    });
+    var response = await fetch(url, {});
     var result = await response.json();
     document.getElementById("idcamketupdate").value = result.id
     document.getElementById("camketupdate").value = result.content
@@ -181,8 +219,7 @@ async function updateCamKet() {
 }
 
 
-
-async function uploadAnh(filePath){
+async function uploadAnh(filePath) {
     const formData = new FormData()
     formData.append("file", filePath.files[0])
     var urlUpload = 'http://localhost:8080/api/public/upload-file';
@@ -193,24 +230,24 @@ async function uploadAnh(filePath){
     if (res.status < 300) {
         var linkImage = await res.text();
         return linkImage
-    }
-    else{
+    } else {
         return null;
     }
 }
 
 var listCamKet = [];
-function addCamKet(){
+
+function addCamKet() {
     var obj = {
-        "content":document.getElementById("camket").value
+        "content": document.getElementById("camket").value
     }
     listCamKet.push(obj);
     setPreviewCamKet();
 }
 
-function setPreviewCamKet(){
+function setPreviewCamKet() {
     var main = '';
-    for(i=0; i< listCamKet.length; i++){
+    for (i = 0; i < listCamKet.length; i++) {
         main += `
         <div class="singlebonho">
             Nội dung cam kết: ${listCamKet[i].content} <i onclick="deleteCamKetTam(${i})" class="fa fa-trash iconxoabn"></i>
@@ -220,14 +257,14 @@ function setPreviewCamKet(){
     document.getElementById("listcamket").innerHTML = main;
 }
 
-function deleteCamKetTam(id){
+function deleteCamKetTam(id) {
     listCamKet.splice(id, 1);
     toastr.success("Đã xóa cam kết khỏi bộ nhớ tạm");
     setPreviewCamKet();
 }
 
 
-async function xoaKhoaHoc(id){
+async function xoaKhoaHoc(id) {
     var con = confirm("Xác nhận xóa khóa học này?")
     if (con == false) {
         return;
@@ -249,7 +286,7 @@ async function xoaKhoaHoc(id){
     }
 }
 
-async function xoaCamKet(id){
+async function xoaCamKet(id) {
     var con = confirm("Xác nhận xóa?")
     if (con == false) {
         return;
@@ -272,7 +309,6 @@ async function xoaCamKet(id){
 }
 
 
-
 async function loadCourseSelectAddBaiThi() {
     $('#example').DataTable().destroy();
     var url = 'http://localhost:8080/api/course/public/find-all';
@@ -280,6 +316,7 @@ async function loadCourseSelectAddBaiThi() {
         method: 'GET'
     });
     var list = await response.json();
+
     var main = '';
     for (i = 0; i < list.length; i++) {
         main += `<option value="${list[i].id}">${list[i].name}</option>`
@@ -297,7 +334,7 @@ async function loadDanhSachHocVien(id) {
     });
     var list = await response.json();
     var main = '';
-    for(i=0; i<list.length; i++){
+    for (i = 0; i < list.length; i++) {
         main += `<tr>
         <td>${list[i].id}</td>
         <td>${list[i].fullName}</td>
@@ -316,7 +353,7 @@ async function loadDanhSachHocVien(id) {
 }
 
 
-async function xoaKhoaHocUser(id, idcourse){
+async function xoaKhoaHocUser(id, idcourse) {
     var con = confirm("Xác nhận xóa học viên này?")
     if (con == false) {
         return;
@@ -341,25 +378,40 @@ async function xoaKhoaHocUser(id, idcourse){
 
 async function loadCourseSelectBaiThi() {
     $('#example').DataTable().destroy();
+    var id = window.location.search.split('=')[1]; // Lấy id từ URL
     var url = 'http://localhost:8080/api/course/public/find-all';
     const response = await fetch(url, {
         method: 'GET'
     });
     var list = await response.json();
-    var main = '<option value="-1">Tất cả bài thi</option>';
-    for (i = 0; i < list.length; i++) {
-        main += `<option value="${list[i].id}">${list[i].name}</option>`
+    console.log(list);
+
+    // var main = '<option value="-1">Chọn khóa học</option>';
+    var main = '';
+    for (let i = 0; i < list.length; i++) {
+        // Kiểm tra nếu id của khóa học trùng với id từ URL thì thêm thuộc tính 'selected'
+        if (list[i].id == id) {
+            main += `<option value="${list[i].id}" selected>${list[i].name}</option>`;
+        } else {
+            main += `<option value="${list[i].id}">${list[i].name}</option>`;
+        }
     }
-    document.getElementById("khoahocbaithi").innerHTML = main
+    document.getElementById("khoahocbaithi").innerHTML = main;
 }
 
+async function selectedonchang() {
+    $('#example').DataTable().destroy();
+    var courseId = document.getElementById("khoahocbaithi").value // Lấy id từ URL
+    var url = `http://localhost:8080/admin/addthanhvien?id=${courseId}`;
+    window.location.href = url;
+}
 
 
 async function loadThongTinHocVien() {
     var uls = new URL(document.URL)
     var id = uls.searchParams.get("id");
     var course = uls.searchParams.get("course");
-    var url = 'http://localhost:8080/api/exam/admin/thong-tin-hoc-vien?course='+course+'&user='+id;
+    var url = 'http://localhost:8080/api/exam/admin/thong-tin-hoc-vien?course=' + course + '&user=' + id;
     const response = await fetch(url, {
         method: 'GET',
         headers: new Headers({
@@ -376,7 +428,7 @@ async function loadThongTinHocVien() {
     document.getElementById("ngaydki").innerHTML = formatdate(hocvien.courseUser.createdDate)
     var tongDiem = 0;
     var main = '';
-    for(i=0; i<hocvien.exams.length; i++){
+    for (i = 0; i < hocvien.exams.length; i++) {
         main += `<tr>
         <td>${hocvien.exams[i].id}</td>
         <td>${hocvien.exams[i].name}</td>
@@ -389,7 +441,7 @@ async function loadThongTinHocVien() {
     document.getElementById("listdethi").innerHTML = main
 
     var main = '';
-    for(i=0; i<hocvien.results.length; i++){
+    for (i = 0; i < hocvien.results.length; i++) {
         tongDiem += hocvien.results[i].phanTram * hocvien.results[i].result.exam.coefficient / 100
         main += `<tr>
         <td>${hocvien.results[i].result.exam.id}</td>
@@ -404,12 +456,11 @@ async function loadThongTinHocVien() {
 }
 
 
-
 async function loadThongTinHocVienChungChi() {
     var uls = new URL(document.URL)
     var id = uls.searchParams.get("id");
     var course = uls.searchParams.get("course");
-    var url = 'http://localhost:8080/api/exam/admin/thong-tin-hoc-vien?course='+course+'&user='+id;
+    var url = 'http://localhost:8080/api/exam/admin/thong-tin-hoc-vien?course=' + course + '&user=' + id;
     const response = await fetch(url, {
         method: 'GET',
         headers: new Headers({
@@ -424,13 +475,11 @@ async function loadThongTinHocVienChungChi() {
 }
 
 
-
-
 async function thongKe() {
     var uls = new URL(document.URL)
     var id = uls.searchParams.get("id");
     var course = uls.searchParams.get("course");
-    var url = 'http://localhost:8080/api/chapter/all/find-by-course?course='+course;
+    var url = 'http://localhost:8080/api/chapter/all/find-by-course?course=' + course;
     var response = await fetch(url, {
         method: 'GET',
         headers: new Headers({
@@ -450,7 +499,7 @@ async function thongKe() {
     main = '<tr>';
     for (i = 0; i < list.length; i++) {
         var listUnit = list[i].units;
-        for(j=0; j<listUnit.length; j++){
+        for (j = 0; j < listUnit.length; j++) {
             main += `<td class="text-center small-text">${listUnit[j].name}</td>`
         }
     }
@@ -459,7 +508,7 @@ async function thongKe() {
     document.getElementById("chuongtk").innerHTML += main
 
 
-    var url = 'http://localhost:8080/api/user-unit/admin/thong-ke?course='+course+'&userId='+id;
+    var url = 'http://localhost:8080/api/user-unit/admin/thong-ke?course=' + course + '&userId=' + id;
     var response = await fetch(url, {
         method: 'GET',
         headers: new Headers({
@@ -474,12 +523,11 @@ async function thongKe() {
         var listUnit = list[i].units;
 
         var tonghoc = 0;
-        for(j=0; j<listUnit.length; j++){
-            if(listUnit[j].daHoc == true){
+        for (j = 0; j < listUnit.length; j++) {
+            if (listUnit[j].daHoc == true) {
                 main += `<td>${listUnit[j].createdDate}</td>`
                 tonghoc += Number(1)
-            }
-            else{
+            } else {
                 main += `<td><span class="text-red">x</span></td>`
             }
         }
@@ -502,7 +550,7 @@ async function updateCC() {
     var id = uls.searchParams.get("id");
     var course = uls.searchParams.get("course");
     var level = document.getElementById("level").value
-    var url = 'http://localhost:8080/api/course-user/admin/update-cc?courseId='+course+"&userId="+id+'&level='+level;
+    var url = 'http://localhost:8080/api/course-user/admin/update-cc?courseId=' + course + "&userId=" + id + '&level=' + level;
     const response = await fetch(url, {
         method: 'POST',
         headers: new Headers({
@@ -517,3 +565,64 @@ async function updateCC() {
         toastr.warning(result.defaultMessage);
     }
 }
+
+
+// các hàm add nhiều user cùng lúc vào
+
+    function getCheckedCheckboxes() {
+    // Lấy tất cả các checkbox đã được chọn
+    const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked:not(#selectAllCheckbox)');
+
+    // Tạo một mảng để lưu giá trị của các checkbox đã chọn (nếu cần)
+    let checkedValues = [];
+    checkedCheckboxes.forEach(checkbox => {
+    checkedValues.push(checkbox.value); // Hoặc dùng checkbox.id để lấy ID
+});
+
+    // In ra console hoặc xử lý dữ liệu theo nhu cầu của bạn
+    console.log('Các checkbox đã chọn:', checkedValues);
+}
+function submitSelectedUsers() {
+    var courseId = window.location.search.split('=')[1];
+    const selectedCheckboxes = document.querySelectorAll('.userCheckbox:checked');
+    const selectedIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
+
+    if (selectedIds.length === 0) {
+        alert('Vui lòng chọn ít nhất một người dùng.');
+        return;
+    }
+
+    // Lấy token từ localStorage hoặc sessionStorage
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    // Gửi dữ liệu tới API
+    fetch('/api/course/admin/add-list-user-to-course/' + selectedIds.join(',') + "?courseId=" + courseId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token // Gửi token trong header
+        }
+    })
+        .then(response => {
+            console.log(response);
+            if (response.status === 200) {
+                // Sử dụng SweetAlert2
+                return Swal.fire({
+                    title: "Thông báo",
+                    text: "Add user vào khóa học thành công",
+                    icon: "success"
+                }).then(() => {
+                    // Chuyển hướng hoặc tải lại trang sau khi thông báo hoàn tất
+                    window.location.reload();
+                });
+            } else {
+                console.error('Response status:', response.status);
+                alert('Có lỗi xảy ra khi thêm thành viên.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra: ' + error.message);
+        });
+}
+

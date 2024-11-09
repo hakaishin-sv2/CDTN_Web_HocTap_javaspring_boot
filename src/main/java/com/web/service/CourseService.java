@@ -10,7 +10,9 @@ import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Date;
 import java.util.List;
@@ -47,9 +49,10 @@ public class CourseService {
     }
 
     public Course findById(Long id) {
-        Course course =  courseRepository.findById(id).get();
-        course.setNumUser(course.getCourseUsers().size());
-        return course;
+        return courseRepository.findById(id).map(course -> {
+            course.setNumUser(course.getCourseUsers().size());
+            return course;
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
     }
 
     public List<Course> findAll() {
@@ -77,7 +80,8 @@ public class CourseService {
     }
 
     public Page<Course> findByStartDate(Pageable pageable){
-        Page<Course> result = courseRepository.findByStartDate(new Date(System.currentTimeMillis()),pageable);
+//        Page<Course> result = courseRepository.findByStartDate(new Date(System.currentTimeMillis()),pageable);
+        Page<Course> result = courseRepository.findAll(pageable);
         result.getContent().forEach(p->{
             p.setNumUser(p.getCourseUsers().size());
         });

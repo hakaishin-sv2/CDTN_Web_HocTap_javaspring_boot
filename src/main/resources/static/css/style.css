@@ -1,5 +1,5 @@
 .logoheader {
-    width: 100px; /* Tăng chiều rộng để hiển thị rõ hơn */
+    width: 80px; /* Tăng chiều rộng để hiển thị rõ hơn */
     height: auto; /* Để tự động điều chỉnh chiều cao theo tỷ lệ */
     margin-left: 10px; /* Tạo khoảng cách nhỏ bên trái */
 }
@@ -76,6 +76,7 @@
 }
 .imglogofooter{
     width: 100%;
+    height: 200px;
 }
 .dangnhapform{
     background: #fff;

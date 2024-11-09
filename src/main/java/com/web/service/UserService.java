@@ -267,4 +267,9 @@ public class UserService {
 
         return userDtos;
     }
+
+    // lấy thông tin usre ko nằm trong khóa học
+    public List<User> findUsersNotInCourseUserByCourseId(Long courseId) {
+        return userRepository.findUsersNotInCourseUserByCourseId(courseId);
+    }
 }

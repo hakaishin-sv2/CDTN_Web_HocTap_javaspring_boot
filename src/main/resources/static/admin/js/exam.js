@@ -10,7 +10,7 @@ async function loadExam() {
         method: 'GET'
     });
     var list = await response.json();
-    console.log(list);
+    //console.log(list);
     var main = '';
     for (i = 0; i < list.length; i++) {
         main += `<tr>
@@ -59,6 +59,7 @@ async function updateTrangThai(e, id) {
 
 async function loadAExam() {
     var id = window.location.search.split('=')[1];
+
     if (id != null) {
         document.getElementById("btnthemdethi").innerHTML = `<i class="fa fa-edit"></i> Cập nhật đề thi`
         var url = 'http://localhost:8080/api/exam/public/findById?id=' + id;
@@ -225,6 +226,7 @@ async function addPhanThi() {
 
 function setPreviewPhanThi(){
     var main = '';
+    console.log(listPhanThi);
     for(i=0; i< listPhanThi.length; i++){
         main += `
         <div class="singlebonho">
@@ -290,13 +292,14 @@ async function loadDsLesson(id){
     var response = await fetch(url, {
     });
     var list = await response.json();
+    console.log(list)
     var main = '';
     for(i=0; i<list.length; i++){
         main += `<tr>
             <td>${list[i].id}</td>
             <td>${list[i].name}</td>
             <td>${list[i].category.name}</td>
-            <td>${list[i].exam.skill == "LISTENING"?`<a href="${list[i].linkFile}">Xem file nghe</a>`:""}</td>
+            <td>${list[i].skill == "TULUAN"?`<a href="${list[i].linkFile}" target="_blank">Xem file Tự Luận</a>`:""}</td>
             <td class="tdcol"><div class="noidunglesson">${list[i].content}</div></td>
             <td>${list[i].questions.length}</td>
             <td><a target="_blank" href="cauhoi?exam=${list[i].id}" class="btn btn-primary">Danh sách câu hỏi</a></td>

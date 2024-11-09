@@ -39,51 +39,67 @@ async function loadDeThi(page) {
     }
 }
 
+async function loadCtDeThi() {
+    try {
+        var uls = new URL(document.URL);
+        var id = uls.searchParams.get("id");
 
-async function loadCtDeThi(){
-    var uls = new URL(document.URL)
-    var id = uls.searchParams.get("id");
+        var url = 'http://localhost:8080/api/lesson/public/find-by-exam?id=' + id;
+        var response = await fetch(url);
+        var list = await response.json();
+        console.log(list);
 
+        var main = '';
+        var arrLess = '';
+        var numQuestion = 0;
 
-    var url = 'http://localhost:8080/api/lesson/public/find-by-exam?id=' + id;
-    var response = await fetch(url, {
-    });
-    var list = await response.json();
-    var main = '';
-    var arrLess = '';
-    var numQuestion = 0;
-    for (i = 0; i < list.length; i++) {
-        main += `<tr>
-        <td style="width: 20%;"><input type="checkbox" checked readonly onclick="return false;"></td>
-        <td>
-            <label for="dt${list[i].id}">
-                ${list[i].name} (${list[i].questions.length} câu hỏi) <br>  <span class="danhmucthi">IELTS Academic</span>
-                <span class="danhmucthi">Listening</span>
-            </label>
-        </td>
-    </tr>`
-    arrLess += `&lesson=${list[i].id}`;
-    numQuestion += list[i].questions.length;
+        for (let i = 0; i < list.length; i++) {
+            main += `<tr>
+                <td style="width: 20%;"><input type="checkbox" checked readonly onclick="return false;"></td>
+                <td>
+                    <label for="dt${list[i].id}">
+                        ${list[i].name} (${list[i].questions ? list[i].questions.length : 0} câu hỏi) <br>  
+                        <span class="danhmucthi">${list[i].category ? list[i].category.name : ''}</span>
+                    </label>
+                </td>
+            </tr>`;
+            arrLess += `&lesson=${list[i].id}`;
+            numQuestion += list[i].questions ? list[i].questions.length : 0;
+        }
+
+        document.getElementById("listlesson").innerHTML = main;
+
+        // Kiểm tra token trước khi thực hiện gọi API
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (!token) {
+            alert("Token không tồn tại. Vui lòng đăng nhập lại.");
+            return;
+        }
+
+        response = await fetch('http://localhost:8080/api/exam/user/find-by-id?id=' + id, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + token
+            }),
+        });
+
+        var result = await response.json();
+
+        // Kiểm tra và thiết lập các giá trị từ `result`
+        var urlfulltest = `lambaithi?exam=${id}&limittime=${result.limitTime}` + arrLess;
+        document.getElementById("linkfulltest").href = urlfulltest;
+        document.getElementById("timedethi").innerHTML = result.limitTime || 'N/A';
+        document.getElementById("sophanthi").innerHTML = result.lessons ? result.lessons.length : 0;
+        document.getElementById("socauhoi").innerHTML = numQuestion;
+        document.getElementById("danhmucdethi").innerHTML = result.course && result.course.category ? result.course.category.name : 'N/A';
+        document.getElementById("tenbaithi").innerHTML = result.course ? result.course.name : 'N/A';
+
+    } catch (error) {
+        console.error("Lỗi khi tải dữ liệu:", error);
+        alert("Có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại.");
     }
-    document.getElementById("listlesson").innerHTML = main
-
-
-
-    var response = await fetch('http://localhost:8080/api/exam/user/find-by-id?id=' + id, {
-        method: 'GET',
-        headers: new Headers({
-            'Authorization': 'Bearer ' + token
-        }),
-    });
-    var result = await response.json();
-    var urlfulltest = `lambaithi?exam=${id}&limittime=${result.limitTime}`+arrLess
-    document.getElementById("linkfulltest").href = urlfulltest
-    document.getElementById("timedethi").innerHTML = result.limitTime
-    document.getElementById("sophanthi").innerHTML = result.lessons.length
-    document.getElementById("socauhoi").innerHTML = numQuestion
-    document.getElementById("danhmucdethi").innerHTML = result.course.category.name
-    document.getElementById("tenbaithi").innerHTML = result.course.name
 }
+
 
 
 
@@ -94,6 +110,7 @@ async function loadThongTinDeThi(){
     const response = await fetch(url, {
     });
     var result = await response.json();
+    //console.log( result)
     document.getElementById("tenbaithi").innerHTML = result.name
 }
 
