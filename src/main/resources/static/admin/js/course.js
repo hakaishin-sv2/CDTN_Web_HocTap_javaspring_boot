@@ -78,19 +78,19 @@ var linkImage = '';
 var linkBanner = '';
 
 async function saveCourse() {
-    document.getElementById("loading").style.display = 'block'
-    var uls = new URL(document.URL)
+    document.getElementById("loading").style.display = 'block';
+
+    // Lấy ID từ URL
+    var uls = new URL(document.URL);
     var id = uls.searchParams.get("id");
 
+    // Upload ảnh đại diện và banner
     var linkImagecheck = await uploadAnh(document.getElementById("anhdaidien"));
     var linkBannercheck = await uploadAnh(document.getElementById("imagebanner"));
-    if (linkImagecheck != null) {
-        linkImage = linkImagecheck
-    }
-    if (linkBannercheck != null) {
-        linkBanner = linkBannercheck
-    }
+    var linkImage = linkImagecheck ? linkImagecheck : "";
+    var linkBanner = linkBannercheck ? linkBannercheck : "";
 
+    // Tạo object `course`
     var course = {
         "id": id,
         "name": document.getElementById("tenkh").value,
@@ -112,32 +112,43 @@ async function saveCourse() {
             "id": document.getElementById("danhmuckhoahoc").value
         },
         "promises": listCamKet,
-    }
+    };
     console.log(course);
 
-    const response = await fetch('http://localhost:8080/api/course/admin/create-update', {
-        method: 'POST',
-        headers: new Headers({
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify(course)
-    });
-    if (response.status < 300) {
-        swal({
+    // Gửi yêu cầu tới API
+    try {
+        const response = await fetch('http://localhost:8080/api/course/admin/create-update', {
+            method: 'POST',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify(course)
+        });
+
+        // Xử lý phản hồi từ API
+        if (response.status < 300) {
+            swal({
                 title: "Thông báo",
-                text: "thêm/sửa khóa học thành công!",
-                type: "success"
-            },
-            function () {
-                window.location.replace('khoahoc')
+                text: "Thêm/Sửa khóa học thành công!",
+                icon: "success",
+                button: "OK",
+            }).then(() => {
+                window.location.replace('khoahoc');
             });
+        } else if (response.status == exceptionCode) {
+            var result = await response.json();
+            toastr.warning(result.defaultMessage);
+        } else {
+            toastr.error("Đã xảy ra lỗi khi lưu khóa học.");
+        }
+    } catch (error) {
+        console.error("Lỗi:", error);
+        toastr.error("Không thể kết nối tới máy chủ.");
+    } finally {
+        // Ẩn loader
+        document.getElementById("loading").style.display = 'none';
     }
-    if (response.status == exceptionCode) {
-        var result = await response.json()
-        toastr.warning(result.defaultMessage);
-    }
-    document.getElementById("loading").style.display = 'none'
 }
 
 

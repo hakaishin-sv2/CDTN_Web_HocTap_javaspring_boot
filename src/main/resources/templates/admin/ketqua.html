@@ -29,6 +29,10 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/result.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
     <script>
         window.onload = function() {
             loadResult();
@@ -46,6 +50,8 @@
                 </div>
                 <div class="col-sm-12">
                     <div class="wrapper">
+                        <button id="exportExcel" class="btn btn-success">Xuất Excel</button>
+                        <button id="exportPDF" class="btn btn-danger">Xuất PDF</button>
                         <table id="example" class="table table-striped tablefix">
                             <thead class="thead-tablefix">
                                 <tr>
@@ -68,6 +74,35 @@
     </div>
 
 </body>
+<script>
+    // Xuất dữ liệu sang Excel
+    document.getElementById("exportExcel").addEventListener("click", function () {
+        var table = document.getElementById("example"); // Lấy bảng HTML
+        var wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" }); // Chuyển đổi bảng sang workbook
+        XLSX.writeFile(wb, "Kết quả thi.xlsx"); // Lưu file Excel
+    });
+
+    // Xuất dữ liệu sang PDF
+    document.getElementById("exportPDF").addEventListener("click", function () {
+        var { jsPDF } = window.jspdf; // Tạo instance của jsPDF
+        var doc = new jsPDF();
+
+        doc.autoTable({
+            html: "#example", // Lấy dữ liệu từ bảng HTML
+            startY: 10,
+            styles: {
+                fontSize: 10,
+                cellPadding: 3,
+            },
+            headStyles: {
+                fillColor: [0, 123, 255], // Màu header
+                textColor: 255,
+            },
+        });
+
+        doc.save("DanhSachHocVien.pdf"); // Lưu file PDF
+    });
+</script>
 
 <script>
     $('#example').DataTable()

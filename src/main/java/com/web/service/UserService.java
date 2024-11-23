@@ -125,7 +125,7 @@ public class UserService {
                     if(exist.getActivation_key() != null){
                         throw new MessageException("Tài khoản chưa được kích hoạt", 330);
                     }
-                    throw new MessageException("Ẻmail đã được sử dụng", 400);
+                    throw new MessageException("Email đã được sử dụng", 400);
                 });
         if (user.getPassword() == null){
             throw new MessageException("Mật khẩu không được ít hơn 3 ký tự");
