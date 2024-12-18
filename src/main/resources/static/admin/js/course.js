@@ -110,7 +110,7 @@ async function saveCourse() {
 
 // Kiểm tra học phí
     var hocphi = document.getElementById("hocphi").value;
-    if (hocphi <= 0) {
+    if (hocphi < 0) {
         document.getElementById("error-hocphi").innerText = 'Học phí phải lớn hơn 0.';
     } else {
         document.getElementById("error-hocphi").innerText = ''; // Xóa thông báo lỗi nếu có
@@ -254,6 +254,10 @@ async function loadACourse() {
         var result = await response.json();
 
         console.log(result);
+        if(result.isfree==true){
+            console.log("ABC");
+        }
+
         document.getElementById("tenkh").value = result.name
         document.getElementById("tungay").value = result.startDate
         linkBanner = result.banner
@@ -262,14 +266,26 @@ async function loadACourse() {
 
         document.getElementById("denngay").value = result.endDate
         document.getElementById("giangvien").value = result.teacher.id
-        document.getElementById("hocphi").value = result.price.toLocaleString('vi-VN');
-        document.getElementById("hocphicu").value = result.oldPrice.toLocaleString('vi-VN');
+        if (result.price !== null && result.price !== undefined) {
+            document.getElementById("hocphi").value = result.price.toLocaleString('vi-VN');
+        } else {
+            document.getElementById("hocphi").value = 0;  // Hoặc gán giá trị mặc định nào đó nếu cần
+        }
+
+        if (result.oldPrice !== null && result.oldPrice !== undefined) {
+            document.getElementById("hocphicu").value = result.oldPrice.toLocaleString('vi-VN');
+        } else {
+            document.getElementById("hocphicu").value = 0;  // Hoặc gán giá trị mặc định nào đó nếu cần
+        }
+
         document.getElementById("isFree").checked = result.isfree;
 
-        if (result.isFree == true) {
+        if (result.isfree === "true" || result.isfree === true) {
             document.getElementById("hocphi").readOnly = true;
             document.getElementById("hocphicu").readOnly = true;
+            document.getElementById("isFree").checked = true;
         }
+
 
         $("#thutrongtuan").val(result.dayOfWeek.split(",")).change()
         document.getElementById("giohoc").value = result.studyTime

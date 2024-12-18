@@ -72,7 +72,44 @@ async function loadTTkhoahoc() {
 }
 
 var linkFile = ''
+function validateForm() {
+    let isValid = true;
+
+    // Kiểm tra tên bài học
+    const tenbaihoc = document.getElementById('tenbaihoc').value.trim();
+    if (!tenbaihoc) {
+        document.getElementById('error-tenbaihoc').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('error-tenbaihoc').style.display = 'none';
+    }
+
+    // Kiểm tra giờ học tối thiểu
+    const giotoithieu = document.getElementById('giotoithieu').value.trim();
+    if (!giotoithieu || parseInt(giotoithieu) <= 0) {
+        document.getElementById('error-giotoithieu').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('error-giotoithieu').style.display = 'none';
+    }
+
+    // Kiểm tra chọn chương
+    const chapterselect = document.getElementById('chapterselect').value.trim();
+    if (!chapterselect) {
+        document.getElementById('error-chapterselect').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('error-chapterselect').style.display = 'none';
+    }
+
+    return isValid;
+}
+
 async function saveUnit() {
+    if (!validateForm()) {
+        toastr.error('Vui lòng điền đầy đủ thông tin vào các trường bắt buộc.');
+        return;
+    }
     document.getElementById("loading").style.display = 'block'
     var uls = new URL(document.URL)
     var id = uls.searchParams.get("id");

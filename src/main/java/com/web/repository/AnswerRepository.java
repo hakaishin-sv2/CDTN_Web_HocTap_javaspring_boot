@@ -10,4 +10,8 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     @Query("select a from Answer a where a.question.id = ?1")
     List<Answer> findByQuestion(Long questionId);
+
+
+    List<Answer> findByQuestion_Id(Long questionId);
+    void deleteByQuestion_Id(Long questionId);
 }

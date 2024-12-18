@@ -81,12 +81,13 @@
                 <h5 class="modal-title" id="exampleModalLabel">Thêm cập nhật câu hỏi</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
             <div class="modal-body row">
                 <form action="javascript:saveCauHoi()" class="col-sm-6" style="margin: auto;">
-                    <label class="lb-form">Câu hỏi</label>
+                    <label class="lb-form">Câu hỏi <span style="color: red;">*</span></label>
                     <input id="idcauhoi" type="hidden" class="form-control">
-                    <input id="title" type="text" class="form-control">
+                    <input id="title" type="text" class="form-control" required>
                     <br>
                     <button class="form-control btn btn-primary">Thêm/ cập nhật câu hỏi</button>
                 </form>
+
             </div>
         </div>
     </div>
@@ -99,7 +100,7 @@
                 <h5 class="modal-title" id="exampleModalLabel">Thêm cập nhật câu trả lời</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
             <div class="modal-body row">
                 <form action="javascript:saveCauTraLoi()" class="col-sm-6" style="margin: auto;">
-                    <label class="lb-form">Đáp án</label>
+                    <label class="lb-form">Đáp án <span style="color: red;">*</span></label>
                     <input id="iddapan" type="hidden" class="form-control">
                     <input id="idquestion" type="hidden" class="form-control">
                     <input id="tieudectl" type="text" class="form-control">

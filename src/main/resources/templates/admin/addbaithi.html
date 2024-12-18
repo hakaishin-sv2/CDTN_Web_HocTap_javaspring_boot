@@ -73,6 +73,7 @@
                 <div class="col-sm-3">
                     <label class="lbadd">Hệ số điểm (%) <span style="color: red;">*</span></label>
                     <input id="heso" type="number" class="form-control" required>
+                    <div id="error-konhapheso" class="text-danger" style="display: none;">Vui lòng nhập hệ số điểm.</div>
                     <div id="error-heso" class="text-danger" style="display: none;">Hệ số điểm phải trong khoảng từ 0 đến 100.</div>
                 </div>
                 <div class="col-sm-12">
@@ -89,7 +90,8 @@
                         <div id="listphanthitam">
                         </div>
                     </div>
-                    <button data-bs-toggle="modal" data-bs-target="#thembonhomodal" class="btn btn-success btnthemhinhanh"><i class="fa fa-plus"></i> Thêm phần thi</button>
+                    <button data-bs-toggle="modal" data-bs-target="#thembonhomodal" class="btn btn-success btnthemhinhanh"><i class="fa fa-plus"></i> Thêm phần thi <span style="color: red;">*</span></button>
+                    <div id="error-phanthi" class="text-danger" style="display: none;">Vui lòng thêm 1 phần thi ấn vào +Thêm phần thi</div>
                 </div>
                 <div class="col-sm-12" style="padding-top: 20px;">
                     <button onclick="saveExam()" class="btn btn-success form-control" id="btnthemdethi"><i class="fa fa-plus"></i> Thêm đề thi</button>
@@ -127,7 +129,7 @@
                     </select>
                 </div>
 
-                <label class="lbadd">Nội dung (chọn file pdf or word tư liệu )</label>
+                <label class="lbadd">Nội dung (chọn file mp4 nếu là bài nghe hoặc nhập nội dung nếu là bài đọc)</label>
                 <div class="col-sm-4"><input type="file" class="form-control" id="chonfilennghe"></div>
                 <div class="col-sm-8"><textarea id="editor" name="content"></textarea></div>
                 <div class="col-sm-12" style="padding-bottom: 20px;">
@@ -149,20 +151,20 @@
                 <h5 class="modal-title" id="exampleModalLabel">Cập nhật thông tin phần thi</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
             <div class="modal-body row">
                 <div class="col-sm-6">
-                    <label class="lbadd">Tên phần thi</label>
+                    <label class="lbadd">Tên phần thi <span style="color: red;">*</span></label>
                     <input id="idlesson" type="hidden" class="form-control">
                     <input id="tenphanthiupdate" class="form-control">
                 </div>
                 <div class="col-sm-6">
-                    <label class="lbadd">Danh mục</label>
+                    <label class="lbadd">Danh mục <span style="color: red;">*</span></label>
                     <select id="danhmucphanthiupdate" class="form-control">
                     </select>
                 </div>
                 <div class="col-sm-6">
-                    <label class="lbadd">Hình thữ thi</label>
+                    <label class="lbadd">Kỹ năng <span style="color: red;">*</span></label>
                     <select id="kynangupdate" class="form-control">
-                        <option value="TULUAN">Tự Luận</option>
-                        <option value="TRACNGHIEM">Trắc Nghiệm</option>
+                        <option value="LISTENING">LISTENING</option>
+                        <option value="READING">READING</option>
                     </select>
                 </div>
                 

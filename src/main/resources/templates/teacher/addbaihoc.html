@@ -45,28 +45,43 @@
             <h5>Thêm/ cập nhật bài học<span id="thongtinlichtap"></span></h5>
             <form class="modal-body row" action="javascript:saveUnit()">
                 <div class="col-sm-4">
-                    <label class="lb-form">Tên bài học</label>
+                    <label class="lb-form">Tên bài học <span style="color: red;">*</span></label>
                     <input id="tenbaihoc" class="form-control">
-                    <label class="lb-form">giờ học tối thiểu (phút)</label>
+                    <div id="error-tenbaihoc" class="error-message" style="color: red; font-size: 12px; display: none;">
+                        Vui lòng nhập tên bài học.
+                    </div>
+
+                    <label class="lb-form">Giờ học tối thiểu (phút) <span style="color: red;">*</span></label>
                     <input id="giotoithieu" type="number" class="form-control">
+                    <div id="error-giotoithieu" class="error-message" style="color: red; font-size: 12px; display: none;">
+                        Vui lòng nhập số phút tối thiểu.
+                    </div>
+
                     <label class="lb-form">Chọn video</label>
                     <input id="chonfile" type="file" class="form-control">
+
                     <label class="lb-form">Chọn Tài Liệu</label>
                     <input id="learning_material" type="file" class="form-control">
-                    <label class="lb-form">Chọn chương</label>
+
+                    <label class="lb-form">Chọn chương <span style="color: red;">*</span></label>
                     <select class="form-control" id="chapterselect">
                         <option value=""></option>
                     </select>
+                    <div id="error-chapterselect" class="error-message" style="color: red; font-size: 12px; display: none;">
+                        Vui lòng chọn chương.
+                    </div>
+
                     <div id="loading">
                         <div class="bar1 bar"></div>
                     </div><br>
-                    <button class="form-control btn btn-primary">Thêm/ cập nhật bài học </button>
+                    <button class="form-control btn btn-primary">Thêm/ cập nhật bài học</button>
                 </div>
                 <div class="col-sm-8">
                     <label class="lb-form">Nội dung bài học</label>
                     <textarea id="editor" name="content" rows="20"></textarea>
                 </div>
             </form>
+
         </div>
     </div>
 </body>

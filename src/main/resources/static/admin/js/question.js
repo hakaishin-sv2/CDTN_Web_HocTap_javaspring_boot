@@ -51,6 +51,12 @@ function clearDataCauHoi(){
 async function saveCauHoi() {
     var uls = new URL(document.URL)
     var id = uls.searchParams.get("exam");
+    var title = document.getElementById("title").value;
+
+    if (title.trim() === "") {
+        toastr.error("Vui lòng nhập tên câu hỏi!");
+        return;
+    }
     var cauhoi = {
         "id": document.getElementById("idcauhoi").value,
         "title": document.getElementById("title").value,
@@ -140,6 +146,12 @@ async function deleteAnw(id) {
 
 
 async function saveCauTraLoi() {
+    var title = document.getElementById("tieudectl").value;
+
+    if (title.trim() === "") {
+        toastr.error("Vui lòng nhập tên câu hỏi!");
+        return;
+    }
     var dapan = {
         "id": document.getElementById("iddapan").value,
         "title": document.getElementById("tieudectl").value,

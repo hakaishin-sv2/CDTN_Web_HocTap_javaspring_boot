@@ -108,7 +108,7 @@ async function changePassword() {
     }
     if (response.status == exceptionCode) {
         var result = await response.json()
-        toastr.warning(result.defaultMessage);
+        toastr.error(result.defaultMessage);
     }
 }
 

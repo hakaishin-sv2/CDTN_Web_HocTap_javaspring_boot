@@ -8,4 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface ResultExamRepository extends JpaRepository<ResultExam, Long> {
     void deleteByResult_Id(Long resultId);
+
+    void deleteByAnswer_Id(Long answerId);
 }

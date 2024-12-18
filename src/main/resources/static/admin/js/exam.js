@@ -107,30 +107,74 @@ async function loadALesson(id) {
 }
 
 async function updateLesson() {
-    document.getElementById("loadingupdate").style.display = 'block'
-    var uls = new URL(document.URL)
+    // Hiển thị loading
+    document.getElementById("loadingupdate").style.display = 'block';
+
+    // Lấy các giá trị từ form
+    var uls = new URL(document.URL);
     var id = uls.searchParams.get("id");
-    const filePath = document.getElementById('chonfilenngheupdate')
-    const formData = new FormData()
-    formData.append("file", filePath.files[0])
-    const res = await fetch('http://localhost:8080/api/public/upload-file', {
-        method: 'POST',  body: formData
-    });
-    if (res.status < 300) { lessonLink = await res.text(); }
-    var phanthi = {
-        "id": document.getElementById("idlesson").value,
-        "name": document.getElementById("tenphanthiupdate").value,
-        "content": tinyMCE.get('editorupdate').getContent(),
-        "linkFile": lessonLink,
-        "skill": document.getElementById("kynangupdate").value,
-        "exam": {
-            "id":id
-        },
-        "category": {
-            "id":document.getElementById("danhmucphanthiupdate").value
-        },
+    const filePath = document.getElementById('chonfilenngheupdate');
+    const tenphanthi = document.getElementById("tenphanthiupdate").value;
+    const danhmucphanthi = document.getElementById("danhmucphanthiupdate").value;
+    const kynang = document.getElementById("kynangupdate").value;
+
+    // Validate các trường nhập
+    let errorMessages = '';
+    if (!tenphanthi) {
+        errorMessages += 'Tên phần thi không được để trống. <br>';
+    }
+    if (!danhmucphanthi) {
+        errorMessages += 'Danh mục không được để trống. <br>';
+    }
+    if (!kynang) {
+        errorMessages += 'Kỹ năng không được chọn. <br>';
+    }
+    if (kynang === 'LISTENING' && !filePath.files.length) {
+        errorMessages += 'Vui lòng chọn file MP4 nếu là bài nghe. <br>';
     }
 
+    if (errorMessages) {
+        // Hiển thị thông báo lỗi nếu có
+        swal({
+            title: "Lỗi",
+            text: errorMessages,
+            type: "error"
+        });
+        document.getElementById("loadingupdate").style.display = 'none';
+        return;  // Dừng hàm nếu có lỗi
+    }
+
+    // Tạo FormData để gửi file
+    const formData = new FormData();
+    formData.append("file", filePath.files[0]);
+
+    // Gửi yêu cầu tải tệp lên server
+    const res = await fetch('http://localhost:8080/api/public/upload-file', {
+        method: 'POST',
+        body: formData
+    });
+
+    let lessonLink = '';  // Biến lưu đường dẫn file
+    if (res.status < 300) {
+        lessonLink = await res.text();
+    }
+
+    // Tạo đối tượng dữ liệu cho phần thi
+    var phanthi = {
+        "id": document.getElementById("idlesson").value,
+        "name": tenphanthi,
+        "content": tinyMCE.get('editorupdate').getContent(),
+        "linkFile": lessonLink,
+        "skill": kynang,
+        "exam": {
+            "id": id
+        },
+        "category": {
+            "id": danhmucphanthi
+        },
+    };
+
+    // Gửi yêu cầu cập nhật phần thi
     const response = await fetch('http://localhost:8080/api/lesson/admin/update', {
         method: 'POST',
         headers: new Headers({
@@ -139,22 +183,25 @@ async function updateLesson() {
         }),
         body: JSON.stringify(phanthi)
     });
+
+    // Kiểm tra kết quả phản hồi từ server
     if (response.status < 300) {
         swal({
-                title: "Thông báo",
-                text: "thêm/sửa phần thi thành công!",
-                type: "success"
-            },
-            function() {
-                window.location.reload();
-            });
-    }
-    if (response.status == exceptionCode) {
-        var result = await response.json()
+            title: "Thông báo",
+            text: "Thêm/sửa phần thi thành công!",
+            type: "success"
+        }, function() {
+            window.location.reload();  // Tải lại trang sau khi cập nhật thành công
+        });
+    } else if (response.status === exceptionCode) {
+        var result = await response.json();
         toastr.warning(result.defaultMessage);
     }
-    document.getElementById("loadingupdate").style.display = 'none'
+
+    // Ẩn loading sau khi hoàn thành
+    document.getElementById("loadingupdate").style.display = 'none';
 }
+
 
 
 async function saveExam() {
@@ -185,7 +232,10 @@ async function saveExam() {
         document.getElementById("error-tenbaithi").style.display = "block";
         errorMessages = true;
     }
-
+    if (!coefficient) {
+        document.getElementById("error-konhapheso").style.display = "block";
+        errorMessages = true;
+    }
     // Kiểm tra thời gian giới hạn
     if (!limitTime || limitTime <= 0) {
         document.getElementById("error-limittime").style.display = "block";
@@ -209,7 +259,10 @@ async function saveExam() {
         document.getElementById("error-khoahoc").style.display = "block";
         errorMessages = true;
     }
-
+    if (id === null && listPhanThi.length===0) {
+        document.getElementById("error-phanthi").style.display = "block";
+        errorMessages = true;
+    }
     // Nếu có lỗi, dừng và hiển thị thông báo
     if (errorMessages) {
         toastr.error("Vui lòng kiểm tra các trường thông tin bắt buộc.");
@@ -269,7 +322,7 @@ async function addPhanThi() {
     var content = tinyMCE.get('editor').getContent();
     var danhmuc = document.getElementById("danhmucphanthi").value;
 
-    if (!tenphanthi || !kynang || !content || !danhmuc ) {
+    if (!tenphanthi || !kynang || !danhmuc ) {
         // Nếu có trường bắt buộc chưa được điền, hiển thị cảnh báo
         toastr.warning("Vui lòng điền đầy đủ thông tin các trường bắt buộc!");
         document.getElementById("loading").style.display = 'none'; // Ẩn loading

@@ -6,7 +6,9 @@ import com.web.entity.Question;
 import com.web.enums.CategoryType;
 import com.web.exception.MessageException;
 import com.web.repository.AnswerRepository;
+import com.web.repository.CategoryRepository;
 import com.web.repository.QuestionRepository;
+import com.web.repository.ResultExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,15 +20,24 @@ public class QuestionService {
 
     @Autowired
     private QuestionRepository questionRepository;
-
+ @Autowired
+ private AnswerRepository answerRepository;
+ @Autowired
+ private ResultExamRepository resultExamRepository;
     public Question save(Question question) {
         Question result = questionRepository.save(question);
         return result;
     }
 
     public void delete(Long id) {
+        List<Answer> answers = answerRepository.findByQuestion_Id(id);
+        for (Answer answer : answers) {
+            resultExamRepository.deleteByAnswer_Id(answer.getId());
+            answerRepository.deleteById(answer.getId());
+        }
         questionRepository.deleteById(id);
     }
+
 
     public Question findById(Long id) {
         Optional<Question> question = questionRepository.findById(id);
@@ -54,8 +65,6 @@ public class QuestionService {
                 questionRepository.delete(question.get());
             }
         }
-    @Autowired
-    private AnswerRepository answerRepository;
     public void deleteQuestionAndAnswers2(Long questionId) {
         Optional<Question> question = questionRepository.findById(questionId);
 
