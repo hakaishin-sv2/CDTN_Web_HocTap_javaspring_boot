@@ -44,7 +44,13 @@
 
     <!-- Link SweetAlert -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <style>
+      .custom-text {
+          font-weight: bold;
+          color: #d9534f; /* Màu đỏ đậm */
+      }
 
+  </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -57,56 +63,71 @@
                     <h4>Thông tin khóa học</h4><hr>
                 </div>
                 <div class="col-sm-3">
-                    <label class="lbadd">Hình ảnh hiển thị</label>
+                    <label class="lbadd">Hình ảnh hiển thị <span style="color: red;">*</span></label>
                     <div class="divimgpreview">
                         <img src="" class="imgpreview" id="imgpreview">
                     </div>
-                    <button onclick="document.getElementById('anhdaidien').click()"  class="btn btn-primary btnthemhinhanh"><i class="fa fa-image"></i> Chọn hình ảnh</button>
+                    <button onclick="document.getElementById('anhdaidien').click()" class="btn btn-primary btnthemhinhanh"><i class="fa fa-image"></i> Chọn hình ảnh</button>
                     <input type="file" style="visibility: hidden;" id="anhdaidien">
-                </div>
-                <div class="col-sm-3">
-                    <label class="lbadd">Tên khóa học</label>
-                    <input id="tenkh" class="inputcontrol">
-                    <label class="lbadd">Từ ngày</label>
-                    <input id="tungay" type="date" class="inputcontrol">
-                    <label class="lbadd">Banner</label>
-                    <input type="file" id="imagebanner" class="form-control">
-                </div>
-                <div class="col-sm-3">
-                    <label class="lbadd">Học phí</label>
-                    <input id="hocphi" class="inputcontrol" type="number" value="0">
-                    <label class="checkbox-custom">Khóa học miễn phí<br>
+                    <div id="error-anhdaidien" class="error-message" style="color: red;"></div>
+                    <label class="checkbox-custom">
+                        <span style="color: #118B50; font-weight: bold">Khóa học miễn phí</span>
                         <input id="isFree" onchange="checkFree(this)" type="checkbox">
                         <span class="checkmark-checkbox"></span>
                     </label>
-                    <label class="lbadd">Đến ngày</label>
+
+                </div>
+                <div class="col-sm-3">
+                    <label class="lbadd">Tên khóa học <span style="color: red;">*</span></label>
+                    <input id="tenkh" class="inputcontrol">
+                    <div id="error-tenkh" class="error-message" style="color: red;"></div>
+                    <label class="lbadd">Từ ngày <span style="color: red;">*</span></label>
+                    <input id="tungay" type="date" class="inputcontrol">
+                    <div id="error-tungay" class="error-message" style="color: red;"></div>
+                    <label class="lbadd">Banner</label>
+                    <input type="file" id="imagebanner" class="form-control">
+                    <div id="error-imagebanner" class="error-message" style="color: red;"></div>
+                </div>
+                <div class="col-sm-3">
+                    <label class="lbadd">Học phí <span style="color: red;">*</span></label>
+<!--                    <input id="hocphi" class="inputcontrol" type="number" value="0">-->
+                    <input type="text"  class="inputcontrol" id="hocphi" placeholder="Nhập học phí" oninput="formatCurrency(this)" value="0">
+                    <div id="error-hocphi" class="error-message" style="color: red;"></div>
+
+                    <label class="lbadd">Đến ngày <span style="color: red;">*</span></label>
                     <input id="denngay" type="date" class="inputcontrol">
-                    <label class="lbadd">Chọn giảng viên</label>
+                    <div id="error-denngay" class="error-message" style="color: red;"></div>
+                    <label class="lbadd">Chọn giảng viên <span style="color: red;">*</span></label>
                     <select id="giangvien" class="form-control">
                         <option value="">giảng viên 1</option>
                     </select>
+                    <div id="error-giangvien" class="error-message" style="color: red;"></div>
                 </div>
                 <div class="col-sm-3">
-                    <label class="lbadd">Học phí giá cũ</label>
-                    <input id="hocphicu" class="inputcontrol" type="number" value="0">
-                    <label class="lbadd">Thứ trong tuần</label>
+                    <label class="lbadd">Học phí giá cũ <span style="color: red;">*</span></label>
+<!--                    <input id="hocphicu" class="inputcontrol" type="number" value="0">-->
+                    <input type="text" id="hocphicu" placeholder="Nhập học phí cũ" oninput="formatCurrency(this)" value="0">
+                    <label class="lbadd">Thứ trong tuần <span style="color: red;">*</span></label>
                     <select id="thutrongtuan" class="inputcontrol" multiple>
                         <option value="2">Thứ 2</option>
                         <option value="3">Thứ 3</option>
-                        <option value="4">Thứ 4 </option>
-                        <option value="5">Thứ 5 </option>
-                        <option value="6">Thứ 6 </option>
-                        <option value="7">Thứ 7 </option>
-                        <option value="8">Chủ nhật </option>
+                        <option value="4">Thứ 4</option>
+                        <option value="5">Thứ 5</option>
+                        <option value="6">Thứ 6</option>
+                        <option value="7">Thứ 7</option>
+                        <option value="8">Chủ nhật</option>
                     </select>
-                    <label class="lbadd">Giờ học</label>
+                    <div id="error-thutrongtuan" class="error-message" style="color: red;"></div>
+                    <label class="lbadd">Giờ học <span style="color: red;">*</span></label>
                     <input id="giohoc" class="form-control">
+                    <div id="error-giohoc" class="error-message" style="color: red;"></div>
                 </div>
                 <div class="col-sm-3"></div>
                 <div class="col-sm-3">
-                    <label class="lbadd">Danh mục</label>
+                    <label class="lbadd">Danh mục <span style="color: red;">*</span></label>
                     <select id="danhmuckhoahoc" class="form-control">
                     </select>
+                    <div id="error-danhmuckhoahoc" class="error-message" style="color: red;"></div>
                 </div>
                 <div class="col-sm-12">
                     <h4 class="lbtieude">Cam kết đạt được sau khóa học</h4><hr>
@@ -130,10 +151,10 @@
                 <div class="col-sm-12">
                     <div class="loading" id="loading">
                         <div class="bar1 bar"></div>
-                    </div><br>
-                    <br><br><button onclick="saveCourse()" class="btn btn-success form-control" id="btnthemkhoahoc"><i class="fa fa-plus"></i> Thêm khóa học</button>
+                    </div><br><br><br><button onclick="saveCourse()" class="btn btn-success form-control" id="btnthemkhoahoc"><i class="fa fa-plus"></i> Thêm khóa học</button>
                 </div>
             </main>
+
         </div>
     </div>
 </body>

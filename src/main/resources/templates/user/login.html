@@ -29,6 +29,19 @@
             loadMenu();
         }
     </script>
+    <style>
+        .inputlogin {
+            width: 100%; /* Làm cho chiều rộng của các input chiếm toàn bộ không gian của container */
+        }
+        .is-invalid {
+            border-color: #dc3545; /* Màu đỏ */
+        }
+
+        .is-valid {
+            border-color: #28a745; /* Màu xanh */
+        }
+
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg headermain" id="menu">
@@ -42,14 +55,42 @@
             </div>
             <div class="divctlogin">
                 <p class="labeldangnhap">Đăng Nhập</p>
+<!--                <form action="javascript:login()" autocomplete="off" style="margin-bottom: 15px">-->
+<!--                    <label class="lbform">Tên tài khoản</label>-->
+<!--                    <input required id="username" class="inputlogin">-->
+<!--                    <label class="lbform">Mật khẩu</label>-->
+<!--                    <input required type="password" id="password" class="inputlogin">-->
+<!--                    <button class="btndangnhap">ĐĂNG NHẬP</button>-->
+<!--                    <button type="button" onclick="window.location.href='regis'" class="btndangky">ĐĂNG KÝ</button>-->
+<!--                </form><br><br>-->
                 <form action="javascript:login()" autocomplete="off" style="margin-bottom: 15px">
-                    <label class="lbform">Tên tài khoản</label>
-                    <input required id="username" class="inputlogin">
-                    <label class="lbform">Mật khẩu</label>
-                    <input required type="password" id="password" class="inputlogin">
+                    <div class="mb-3">
+                        <label for="username" class="lbform">Tên tài khoản (Email)</label>
+                        <div class="input-group">
+                            <input
+                                    required
+                                    id="username"
+                                    class="form-control inputlogin"
+                                    placeholder="Nhập email của bạn"
+                                    aria-describedby="emailFeedback"
+                                    oninput="validateEmailInput()">
+
+                        </div>
+                        <div id="emailHelp" class="form-text text-danger d-none">
+                            Email không hợp lệ.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="lbform">Mật khẩu</label>
+                        <input
+                                required
+                                type="password"
+                                id="password"
+                                class="form-control inputlogin">
+                    </div>
                     <button class="btndangnhap">ĐĂNG NHẬP</button>
                     <button type="button" onclick="window.location.href='regis'" class="btndangky">ĐĂNG KÝ</button>
-                </form><br><br>
+                </form>
                 <hr style="clear: both;">
                 <p class="text-center">Hoặc đăng nhập với tài khoản google</p>
                 <div class="parentlogingg">
@@ -67,6 +108,33 @@
 </div>
 
 <div id="footer"></div>
+<script>
+    // Hàm kiểm tra định dạng email
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Hàm kiểm tra email khi người dùng nhập vào
+    function validateEmailInput() {
+        const usernameInput = document.getElementById('username');
+        const emailValue = usernameInput.value;
+        const emailFeedback = document.getElementById('emailHelp');
+        const emailIcon = document.getElementById('emailIcon');
+
+        if (validateEmail(emailValue)) {
+            usernameInput.classList.add('is-valid');
+            usernameInput.classList.remove('is-invalid');
+            emailFeedback.classList.add('d-none'); // Ẩn thông báo lỗi
+            emailIcon.className = 'bi bi-check-circle text-success'; // Hiện dấu tích xanh
+        } else {
+            usernameInput.classList.add('is-invalid');
+            usernameInput.classList.remove('is-valid');
+            emailFeedback.classList.remove('d-none'); // Hiện thông báo lỗi
+            emailIcon.className = 'bi bi-x-circle text-danger'; // Hiện dấu x đỏ
+        }
+    }
+</script>
 </body>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </html>

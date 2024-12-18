@@ -34,6 +34,13 @@
             loadKhoaHocCuaToiSelect();
         }
     </script>
+    <style>
+        .required {
+            color: red;
+            font-weight: bold;
+        }
+
+    </style>
 </head>
 <body>
     <div class="navleft" id="navleft"></div>
@@ -43,18 +50,19 @@
             <h5>Thêm/ cập nhật tài liệu <span id="thongtinlichtap"></span></h5>
             <form class="modal-body row" action="javascript:saveTaiLieu()">
                 <div class="col-sm-5">
-                    <label class="lb-form">Chọn file</label>
+                    <label class="lb-form">Chọn file <span class="required">*</span></label>
                     <input id="chonfile" type="file" class="form-control">
-                    <label class="lb-form">Chọn khóa học</label>
+                    <label class="lb-form">Chọn khóa học <span class="required">*</span></label>
                     <select class="form-control" id="khoahocselect">
                         <option value=""></option>
                     </select>
                     <div id="loading">
                         <div class="bar1 bar"></div>
                     </div><br>
-                    <button class="form-control btn btn-primary">Thêm/ cập nhật tài liệu </button>
+                    <button class="form-control btn btn-primary">Thêm/ cập nhật tài liệu</button>
                 </div>
             </form>
+
         </div>
     </div>
 </body>

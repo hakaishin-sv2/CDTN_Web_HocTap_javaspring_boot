@@ -43,23 +43,29 @@
         <div id="layoutSidenav_content">
             <main class="main row">
                 <div class="col-sm-5">
-                    <label class="lb-form">Tiêu đề blog</label>
+                    <label class="lb-form">Tiêu đề blog <span style="color: red;">*</span></label>
                     <input id="title" type="text" class="form-control">
-                    <label class="lb-form">Ảnh bài viết</label>
+
+                    <label class="lb-form">Ảnh bài viết <span style="color: red;">*</span></label>
                     <input id="fileimage" type="file" class="form-control">
                     <img id="imgpreview" style="width: 120px; margin-top: 15px;margin-bottom: 15px;display: block;">
-                    <label class="lb-form">Mô tả</label>
+
+                    <label class="lb-form">Mô tả <span style="color: red;">*</span></label>
                     <textarea id="description" class="form-control" style="height: 200px;"></textarea>
                 </div>
+
                 <div class="col-md-7">
-                    <label>Nội dung</label>
+                    <label>Nội dung <span style="color: red;">*</span></label>
                     <textarea id="editor" name="content"></textarea>
+
                     <div id="loading">
                         <div class="bar1 bar"></div>
                     </div><br>
+
                     <button onclick="saveBlog()" class="btn btn-success form-control action-btn">Thêm/ Cập nhật bài viết</button>
                 </div>
             </main>
+
         </div>
     </div>
 </body>

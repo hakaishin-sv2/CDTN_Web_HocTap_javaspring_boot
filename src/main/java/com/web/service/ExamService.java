@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ public class ExamService {
 
     @Autowired
     private ResultRepository resultRepository;
+
+    @Autowired
+    private ResultExamRepository resultExamRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -118,9 +122,18 @@ public class ExamService {
         return exam;
     }
 
-    public void delete(Long id){
-        examRepository.deleteById(id);
+    @Transactional
+    public void deleteExam(Long examId) {
+        List<Result> results = resultRepository.findByExam_Id(examId);
+        for (Result result : results) {
+            resultExamRepository.deleteByResult_Id(result.getId());
+        }
+
+        resultRepository.deleteByExamId(examId);
+
+        examRepository.deleteById(examId); // Xóa exam
     }
+
 
 
     public Exam findByIdAndUser(Long id){

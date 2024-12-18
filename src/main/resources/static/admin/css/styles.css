@@ -14,6 +14,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
+
 :root {
     --bs-blue: #0d6efd;
     --bs-indigo: #6610f2;
@@ -12631,6 +12632,7 @@ label {
 }
 .divimgpreview{
     width: 100%;
+
     border: 1px solid #c2c2c2;
     border-radius: 5px;
     padding-top: 10px;
@@ -12639,7 +12641,7 @@ label {
 .imgpreview{
     width: 60%;
     margin-left: 20%;
-    height: 100%;
+    height: 90%;
     object-fit: cover;
 }
 .btnthemhinhanh{

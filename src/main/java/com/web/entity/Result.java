@@ -36,6 +36,7 @@ public class Result {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "result", cascade = CascadeType.REMOVE)
+
+    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResultExam> resultExams;
 }

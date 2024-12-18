@@ -21,8 +21,11 @@ public class ResultExam {
     @JoinColumn(name = "answers_id")
     private Answer answer;
 
-    @ManyToOne
+
+
+    @ManyToOne(cascade = CascadeType.ALL)  // Đảm bảo sử dụng CascadeType.REMOVE
     @JoinColumn(name = "result_id")
     @JsonIgnoreProperties(value = {"resultExams"})
     private Result result;
+
 }

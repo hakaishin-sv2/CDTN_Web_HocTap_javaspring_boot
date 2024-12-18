@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Skill {
-    TULUAN, TRACNGHIEM
-   // LISTENING, SPEAKING, READING, WRITING
+//    TULUAN, TRACNGHIEM
+    LISTENING, SPEAKING, READING, WRITING
 }

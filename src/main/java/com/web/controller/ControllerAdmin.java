@@ -64,6 +64,8 @@ public class ControllerAdmin {
 
     @RequestMapping(value = {"/index"}, method = RequestMethod.GET)
     public String index() {
+
+
         return "admin/index";
     }
 

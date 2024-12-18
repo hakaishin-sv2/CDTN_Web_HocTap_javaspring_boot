@@ -4,14 +4,14 @@ import com.web.entity.Course;
 import com.web.entity.Promise;
 import com.web.entity.Question;
 import com.web.exception.MessageException;
-import com.web.repository.CourseRepository;
-import com.web.repository.PromiseRepository;
+import com.web.repository.*;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Date;
@@ -28,7 +28,19 @@ public class CourseService {
     private PromiseRepository promiseRepository;
 
     @Autowired
+    private ChapterRepository chapterRepository;
+
+    @Autowired
     private UserUtils userUtils;
+
+    @Autowired
+    private DocumentRepository documentRepository;
+
+    @Autowired
+    private UnitRepository unitRepository;
+
+    @Autowired
+    private  UnitUserRepository unitUserRepository;
 
     public Course save(Course course) {
         if (course.getOldPrice() !=null){
@@ -36,6 +48,13 @@ public class CourseService {
                 course.setOldPrice(null);
             }
         }
+        if (course.getId() != null) {
+            var temp = courseRepository.findById(course.getId());
+            if (temp.isPresent()) {
+                course.setImage(temp.get().getImage());
+            }
+        }
+
         Course result = courseRepository.save(course);
         for(Promise p : course.getPromises()){
             p.setCourse(result);
@@ -44,9 +63,27 @@ public class CourseService {
         return result;
     }
 
+    @Transactional
     public void delete(Long id) {
+        // Xóa các bản ghi trong bảng document liên quan đến course trước
+        documentRepository.deleteByCourseId(id);
+        promiseRepository.deleteByCourseId(id);
+
+        // Xóa các chapter và unit liên quan đến course
+        List<Long> chapterIds = chapterRepository.findChapterIdsByCourse_Id(id);
+        if (chapterIds != null && !chapterIds.isEmpty()) {
+            List<Long> unitIds = unitRepository.findUnitIdsByChapterIds(chapterIds);
+            if (unitIds != null && !unitIds.isEmpty()) {
+                unitUserRepository.deleteByUnitIds(unitIds);
+                unitRepository.deleteUnitsByIds(unitIds);
+            }
+            chapterRepository.deleteChaptersByIds(chapterIds);
+        }
+
+        // Cuối cùng xóa course
         courseRepository.deleteById(id);
     }
+
 
     public Course findById(Long id) {
         return courseRepository.findById(id).map(course -> {
@@ -76,6 +113,7 @@ public class CourseService {
         result.forEach(course -> {
             course.setNumUser(course.getCourseUsers().size());
         });
+        var x = result;
         return result;
     }
 

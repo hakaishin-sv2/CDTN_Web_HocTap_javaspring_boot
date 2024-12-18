@@ -27,33 +27,44 @@ async function loadBlog() {
 
 var linkImage = ''
 async function saveBlog() {
-    document.getElementById("loading").style.display = 'block'
-    var uls = new URL(document.URL)
+    document.getElementById("loading").style.display = 'block';
+
+    var title = document.getElementById("title").value;
+    var description = document.getElementById("description").value;
+    var content = tinyMCE.get('editor').getContent();
+    const filePath = document.getElementById('fileimage');
+
+    // Kiểm tra nếu các trường bắt buộc còn trống
+    if (!title || !description || !content || !filePath.files.length) {
+        toastr.warning('Vui lòng điền đầy đủ các trường bắt buộc.', 'Cảnh báo');
+        document.getElementById("loading").style.display = 'none';
+        return;  // Dừng quá trình nếu có trường không hợp lệ
+    }
+
+    var uls = new URL(document.URL);
     var id = uls.searchParams.get("id");
     var url = 'http://localhost:8080/api/blog/admin/create-update';
 
-    var title = document.getElementById("title").value
-    var description = document.getElementById("description").value
-    var content = tinyMCE.get('editor').getContent()
-
-    const filePath = document.getElementById('fileimage')
-    const formData = new FormData()
-    formData.append("file", filePath.files[0])
+    const formData = new FormData();
+    formData.append("file", filePath.files[0]);
     var urlUpload = 'http://localhost:8080/api/public/upload-file';
     const res = await fetch(urlUpload, {
         method: 'POST',
         body: formData
     });
+
+    var linkImage = "";
     if (res.status < 300) {
         linkImage = await res.text();
     }
+
     var blog = {
         "id": id,
         "title": title,
         "description": description,
         "content": content,
         "imageBanner": linkImage,
-    }
+    };
 
     const response = await fetch(url, {
         method: 'POST',
@@ -63,22 +74,26 @@ async function saveBlog() {
         }),
         body: JSON.stringify(blog)
     });
+
     if (response.status < 300) {
         swal({
                 title: "Thông báo",
-                text: "thêm/sửa blog thành công!",
+                text: "Thêm/sửa blog thành công!",
                 type: "success"
             },
             function() {
-                window.location.replace('blog')
+                window.location.replace('blog');
             });
     }
+
     if (response.status == exceptionCode) {
-        var result = await response.json()
+        var result = await response.json();
         toastr.warning(result.defaultMessage);
     }
-    document.getElementById("loading").style.display = 'none'
+
+    document.getElementById("loading").style.display = 'none';
 }
+
 
 async function loadABlog() {
     var id = window.location.search.split('=')[1];

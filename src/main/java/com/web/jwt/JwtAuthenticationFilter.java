@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
@@ -47,7 +48,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // Lấy jwt từ request
             String jwt = getJwtFromRequest((HttpServletRequest) request);
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                // Lấy id user từ chuỗi jwt
+                if (tokenProvider.getExpirationDateFromToken(jwt).getTime() - System.currentTimeMillis() < 600000) {
+                    //refreshToken
+                    String refreshedToken = tokenProvider.refreshToken(jwt);
+                    ((HttpServletResponse) response).setHeader("Authorization", "Bearer " + refreshedToken);
+                }
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
                 // Lấy thông tin người dùng từ id
                 UserDetails userDetails = new CustomUserDetails(userRepository.findById(userId).get());

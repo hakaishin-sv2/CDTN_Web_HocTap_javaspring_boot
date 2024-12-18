@@ -30,20 +30,28 @@ async function loadTaiLieu() {
 
 var linkFile = ''
 async function saveTaiLieu() {
-    document.getElementById("loading").style.display = 'block'
-    var uls = new URL(document.URL)
+    document.getElementById("loading").style.display = 'block';
+    var uls = new URL(document.URL);
     var id = uls.searchParams.get("id");
     var khoahoc = uls.searchParams.get("khoahoc");
     var url = 'http://localhost:8080/api/document/teacher/create-update';
 
-    const filePath = document.getElementById('chonfile')
+    const filePath = document.getElementById('chonfile');
+
+    // Kiểm tra nếu không chọn file
+    if (filePath.files.length === 0) {
+        toastr.error("Vui lòng chọn file!");
+        document.getElementById("loading").style.display = 'none';
+        return; // Dừng hàm nếu chưa chọn file
+    }
+
     const fileType = filePath.files[0].type;
     const fileSize = filePath.files[0].size;
     const fileName = filePath.files[0].name;
 
     var linkFilet = await uploadFile(filePath);
-    if(linkFilet != null){
-        linkFile = linkFilet
+    if (linkFilet != null) {
+        linkFile = linkFilet;
     }
     var tailieu = {
         "id": id,
@@ -52,9 +60,9 @@ async function saveTaiLieu() {
         "linkFile": linkFile,
         "storage": chuyenDungLuong(fileSize),
         "course": {
-            "id":document.getElementById("khoahocselect").value
+            "id": document.getElementById("khoahocselect").value
         },
-    }
+    };
 
     const response = await fetch(url, {
         method: 'POST',
@@ -64,27 +72,28 @@ async function saveTaiLieu() {
         }),
         body: JSON.stringify(tailieu)
     });
+
     if (response.status < 300) {
         swal({
                 title: "Thông báo",
-                text: "thêm/sửa tài liệu thành công!",
+                text: "Thêm/sửa tài liệu thành công!",
                 type: "success"
             },
             function() {
-                if(khoahoc == null){
-                    window.location.replace('tailieu')
-                }
-                else{
-                    window.location.replace('tailieu?khoahoc='+khoahoc)
+                if (khoahoc == null) {
+                    window.location.replace('tailieu');
+                } else {
+                    window.location.replace('tailieu?khoahoc=' + khoahoc);
                 }
             });
     }
     if (response.status == exceptionCode) {
-        var result = await response.json()
+        var result = await response.json();
         toastr.warning(result.defaultMessage);
     }
-    document.getElementById("loading").style.display = 'none'
+    document.getElementById("loading").style.display = 'none';
 }
+
 
 
 function chuyenDungLuong(fileSizeInBytes){

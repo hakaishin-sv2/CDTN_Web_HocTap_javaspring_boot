@@ -30,7 +30,8 @@ async function loadMenu(){
       </ul>
       <div class="d-flex">
           <ul class="listdmheader">
-              <li class="liheader"><a href="timkhoahoc" class="navlink">Khóa học online</a></li>
+              <li class="liheader"><a href="index" class="navlink">Trang chủ</a></li>
+              <li class="liheader"><a href="timkhoahoc" class="navlink">Khóa học</a></li>
               <li class="liheader"><a href="baiviet" class="navlink">Blog</a></li>
               ${dn}
           </ul>

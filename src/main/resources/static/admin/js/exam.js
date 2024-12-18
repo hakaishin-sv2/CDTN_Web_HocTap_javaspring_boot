@@ -158,22 +158,79 @@ async function updateLesson() {
 
 
 async function saveExam() {
-    var uls = new URL(document.URL)
+    var uls = new URL(document.URL);
     var id = uls.searchParams.get("id");
 
+    // Lấy giá trị từ các input
+    var tenBaithi = document.getElementById("tenbaithi").value;
+    var limitTime = document.getElementById("limittime").value;
+    var examDate = document.getElementById("ngaythi").value;
+    var examTime = document.getElementById("giothi").value;
+    var coefficient = document.getElementById("heso").value;
+    var courseId = document.getElementById("khoahocbaithi").value;
+
+    // Ẩn tất cả thông báo lỗi
+    document.getElementById("error-tenbaithi").style.display = "none";
+    document.getElementById("error-limittime").style.display = "none";
+    document.getElementById("error-ngaythi").style.display = "none";
+    document.getElementById("error-giothi").style.display = "none";
+    document.getElementById("error-heso").style.display = "none";
+    document.getElementById("error-khoahoc").style.display = "none";
+
+    // Kiểm tra dữ liệu nhập vào
+    var errorMessages = false;
+
+    // Kiểm tra tên bài thi
+    if (!tenBaithi) {
+        document.getElementById("error-tenbaithi").style.display = "block";
+        errorMessages = true;
+    }
+
+    // Kiểm tra thời gian giới hạn
+    if (!limitTime || limitTime <= 0) {
+        document.getElementById("error-limittime").style.display = "block";
+        errorMessages = true;
+    }
+
+    // Kiểm tra hệ số điểm
+    if (coefficient < 0 || coefficient > 100) {
+        document.getElementById("error-heso").style.display = "block";
+        errorMessages = true;
+    }
+
+    // Kiểm tra ngày thi
+    if (!examDate) {
+        document.getElementById("error-ngaythi").style.display = "block";
+        errorMessages = true;
+    }
+
+    // Kiểm tra khóa học
+    if (!courseId) {
+        document.getElementById("error-khoahoc").style.display = "block";
+        errorMessages = true;
+    }
+
+    // Nếu có lỗi, dừng và hiển thị thông báo
+    if (errorMessages) {
+        toastr.error("Vui lòng kiểm tra các trường thông tin bắt buộc.");
+        return; // Dừng không gửi dữ liệu nếu có lỗi
+    }
+
+    // Tạo đối tượng baithi
     var baithi = {
         "id": id,
-        "name": document.getElementById("tenbaithi").value,
-        "limitTime": document.getElementById("limittime").value,
-        "examDate": document.getElementById("ngaythi").value,
-        "examTime": document.getElementById("giothi").value,
-        "coefficient": document.getElementById("heso").value,
+        "name": tenBaithi,
+        "limitTime": limitTime,
+        "examDate": examDate,
+        "examTime": examTime,
+        "coefficient": coefficient,
         "lessonDtos": listPhanThi,
         "course": {
-            "id":document.getElementById("khoahocbaithi").value
+            "id": courseId
         },
     }
 
+    // Gửi yêu cầu POST để thêm/sửa bài thi
     const response = await fetch('http://localhost:8080/api/exam/admin/create-update', {
         method: 'POST',
         headers: new Headers({
@@ -182,47 +239,78 @@ async function saveExam() {
         }),
         body: JSON.stringify(baithi)
     });
+
     if (response.status < 300) {
         swal({
                 title: "Thông báo",
-                text: "thêm/sửa bài thi thành công!",
+                text: "Thêm/sửa bài thi thành công!",
                 type: "success"
             },
             function() {
-                window.location.replace('baithi')
+                window.location.replace('baithi');
             });
-    }
-    if (response.status == exceptionCode) {
-        var result = await response.json()
+    } else if (response.status == exceptionCode) {
+        var result = await response.json();
         toastr.warning(result.defaultMessage);
     }
 }
 
+
 var listPhanThi = [];
 async function addPhanThi() {
-    document.getElementById("loading").style.display = 'block'
+    // Hiển thị loading khi thực hiện
+    document.getElementById("loading").style.display = 'block';
+
+    // Kiểm tra các trường bắt buộc
+    var tenphanthi = document.getElementById("tenphanthi").value;
+    var kynang = document.getElementById("kynang").value;
     var linkFile = '';
-    const filePath = document.getElementById('chonfilennghe')
-    const formData = new FormData()
-    formData.append("file", filePath.files[0])
+    var filePath = document.getElementById('chonfilennghe');
+    var content = tinyMCE.get('editor').getContent();
+    var danhmuc = document.getElementById("danhmucphanthi").value;
+
+    if (!tenphanthi || !kynang || !content || !danhmuc ) {
+        // Nếu có trường bắt buộc chưa được điền, hiển thị cảnh báo
+        toastr.warning("Vui lòng điền đầy đủ thông tin các trường bắt buộc!");
+        document.getElementById("loading").style.display = 'none'; // Ẩn loading
+        return; // Dừng lại không thực hiện các bước tiếp theo
+    }
+
+    // Tiến hành upload file
+    const formData = new FormData();
+    formData.append("file", filePath.files[0]);
+
     const res = await fetch('http://localhost:8080/api/public/upload-file', {
-        method: 'POST',  body: formData
+        method: 'POST',
+        body: formData
     });
-    if (res.status < 300) { linkFile = await res.text(); }
+
+    if (res.status < 300) {
+        linkFile = await res.text(); // Lấy link file trả về
+    }
+
+    // Tạo đối tượng phần thi
     var phanthi = {
-        "name": document.getElementById("tenphanthi").value,
-        "skill": document.getElementById("kynang").value,
-        "content":  tinyMCE.get('editor').getContent(),
+        "name": tenphanthi,
+        "skill": kynang,
+        "content": content,
         "linkFile": linkFile,
         "category": {
-            "id":document.getElementById("danhmucphanthi").value
+            "id": danhmuc
         },
     }
+
+    // Thêm phần thi vào bộ nhớ tạm
     listPhanThi.push(phanthi);
-    document.getElementById("loading").style.display = 'none'
-    toastr.success("Đã thêm vào bộ nhớ tạm")
+
+    // Ẩn loading và hiển thị thông báo thành công
+    document.getElementById("loading").style.display = 'none';
+    toastr.success("Đã thêm vào bộ nhớ tạm");
+
+    // Cập nhật preview phần thi
     setPreviewPhanThi();
 }
+
 
 function setPreviewPhanThi(){
     var main = '';

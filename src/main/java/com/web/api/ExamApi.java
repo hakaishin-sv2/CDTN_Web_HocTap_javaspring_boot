@@ -59,7 +59,7 @@ public class ExamApi {
 
     @DeleteMapping("/admin/delete")
     public ResponseEntity<?> delete(@RequestParam("id") Long id){
-        examService.delete(id);
+        examService.deleteExam(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

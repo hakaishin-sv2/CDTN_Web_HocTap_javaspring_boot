@@ -17,7 +17,7 @@ async function loadKhoaHocCuaToi() {
                 <li onclick="window.location.href='tailieu?khoahoc=${list[i].id}'"><a class="dropdown-item"><i class="fa fa-file"></i> Tài liệu</a></li>
                 <li onclick="window.location.href='chapter?khoahoc=${list[i].id}'"><a class="dropdown-item" href="#"><i class="fa fa-list"></i> Nội dung</a></li>
                 <li onclick="window.location.href='thongke?khoahoc=${list[i].id}'"><a class="dropdown-item" href="#"><i class="fa fa-chart-line"></i> Thống kê</a></li>
-            </ul>
+            
         </div>
     </div>`
     }

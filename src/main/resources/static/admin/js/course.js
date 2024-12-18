@@ -77,12 +77,103 @@ function checkFree(e) {
 var linkImage = '';
 var linkBanner = '';
 
+function formatCurrency(input) {
+    var value = input.value;
+    value = value.replace(/[^\d]/g, '');
+    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    input.value = value + " VNĐ";
+}
+
+// Hàm lấy giá trị và loại bỏ dấu phẩy, VNĐ
+function getFormattedValue(id) {
+    var value = document.getElementById(id).value;
+    value = value.replace(/ VNĐ/g, '').replace(/,/g, '');
+
+    return parseFloat(value);
+}
+
 async function saveCourse() {
     document.getElementById("loading").style.display = 'block';
 
     // Lấy ID từ URL
     var uls = new URL(document.URL);
     var id = uls.searchParams.get("id");
+
+    // Validate các trường
+    // Kiểm tra tên khóa học
+    var courseName = document.getElementById("tenkh").value.trim();
+    if (courseName === '') {
+        document.getElementById("error-tenkh").innerText = 'Tên khóa học không được để trống.';
+    } else {
+        document.getElementById("error-tenkh").innerText = ''; // Xóa thông báo lỗi nếu có
+    }
+
+// Kiểm tra học phí
+    var hocphi = document.getElementById("hocphi").value;
+    if (hocphi <= 0) {
+        document.getElementById("error-hocphi").innerText = 'Học phí phải lớn hơn 0.';
+    } else {
+        document.getElementById("error-hocphi").innerText = ''; // Xóa thông báo lỗi nếu có
+    }
+
+// Kiểm tra ngày bắt đầu và ngày kết thúc
+    var startDate = document.getElementById("tungay").value;
+    var endDate = document.getElementById("denngay").value;
+    if (startDate === '') {
+        document.getElementById("error-tungay").innerText = 'Ngày bắt đầu không được để trống.';
+    } else {
+        document.getElementById("error-tungay").innerText = ''; // Xóa thông báo lỗi nếu có
+    }
+    if (endDate === '') {
+        document.getElementById("error-denngay").innerText = 'Ngày kết thúc không được để trống.';
+    } else {
+        document.getElementById("error-denngay").innerText = ''; // Xóa thông báo lỗi nếu có
+    }
+
+// Kiểm tra giảng viên
+    var teacherId = document.getElementById("giangvien").value;
+    if (teacherId === '') {
+        document.getElementById("error-giangvien").innerText = 'Chưa chọn giảng viên.';
+    } else {
+        document.getElementById("error-giangvien").innerText = ''; // Xóa thông báo lỗi nếu có
+    }
+
+// Kiểm tra danh mục
+    var categoryId = document.getElementById("danhmuckhoahoc").value;
+    if (categoryId === '') {
+        document.getElementById("error-danhmuckhoahoc").innerText = 'Chưa chọn danh mục.';
+    } else {
+        document.getElementById("error-danhmuckhoahoc").innerText = ''; // Xóa thông báo lỗi nếu có
+    }
+
+
+    var hasError = false;
+
+    document.querySelectorAll('.error-message').forEach(function(errorDiv) {
+        if (errorDiv.innerText.trim() !== '') {
+            hasError = true;
+        }
+    });
+
+    if (hasError) {
+        toastr.warning('Vui lòng kiểm tra lại các thông tin đã nhập.');
+        document.getElementById("loading").style.display = 'none';
+        return;  // Dừng lại nếu có lỗi
+    }
+
+    // Lấy các giá trị cần thiết từ DOM một lần để tránh lặp lại
+    var courseName = document.getElementById("tenkh").value.trim();
+    var hocphi = document.getElementById("hocphi").value;
+    var hocphicu = document.getElementById("hocphicu").value;
+    var description = tinyMCE.get('editor').getContent();
+    var instruct = tinyMCE.get('editorch').getContent();
+    var dayOfWeek = $("#thutrongtuan").val().toString();
+    var studyTime = document.getElementById("giohoc").value;
+    var startDate = document.getElementById("tungay").value;
+    var endDate = document.getElementById("denngay").value;
+    var isFree = document.getElementById("isFree").checked;
+    var teacherId = document.getElementById("giangvien").value;
+    var categoryId = document.getElementById("danhmuckhoahoc").value;
 
     // Upload ảnh đại diện và banner
     var linkImagecheck = await uploadAnh(document.getElementById("anhdaidien"));
@@ -93,23 +184,23 @@ async function saveCourse() {
     // Tạo object `course`
     var course = {
         "id": id,
-        "name": document.getElementById("tenkh").value,
+        "name": courseName,
         "image": linkImage,
         "banner": linkBanner,
-        "price": document.getElementById("hocphi").value,
-        "oldPrice": document.getElementById("hocphicu").value,
-        "description": tinyMCE.get('editor').getContent(),
-        "instruct": tinyMCE.get('editorch').getContent(),
-        "dayOfWeek": $("#thutrongtuan").val().toString(),
-        "studyTime": document.getElementById("giohoc").value,
-        "startDate": document.getElementById("tungay").value,
-        "endDate": document.getElementById("denngay").value,
-        "isfree": document.getElementById("isFree").checked,
+        "price": hocphi.replace(/ VNĐ|,/g, ''),  // Xử lý học phí (loại bỏ dấu phẩy và VNĐ)
+        "oldPrice": hocphicu.replace(/ VNĐ|,/g, ''),  // Xử lý học phí cũ
+        "description": description,
+        "instruct": instruct,
+        "dayOfWeek": dayOfWeek,
+        "studyTime": studyTime,
+        "startDate": startDate,
+        "endDate": endDate,
+        "isfree": isFree,
         "teacher": {
-            "id": document.getElementById("giangvien").value
+            "id": teacherId
         },
         "category": {
-            "id": document.getElementById("danhmuckhoahoc").value
+            "id": categoryId
         },
         "promises": listCamKet,
     };
@@ -152,6 +243,8 @@ async function saveCourse() {
 }
 
 
+
+
 async function loadACourse() {
     var id = window.location.search.split('=')[1];
     if (id != null) {
@@ -166,10 +259,11 @@ async function loadACourse() {
         linkBanner = result.banner
         linkImage = result.image
         document.getElementById("imgpreview").src = result.image
-        document.getElementById("hocphi").value = result.price
+
         document.getElementById("denngay").value = result.endDate
         document.getElementById("giangvien").value = result.teacher.id
-        document.getElementById("hocphicu").value = result.oldPrice
+        document.getElementById("hocphi").value = result.price.toLocaleString('vi-VN');
+        document.getElementById("hocphicu").value = result.oldPrice.toLocaleString('vi-VN');
         document.getElementById("isFree").checked = result.isfree;
 
         if (result.isFree == true) {

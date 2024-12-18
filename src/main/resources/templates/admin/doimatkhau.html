@@ -33,6 +33,17 @@
         window.onload = function() {
         }
     </script>
+    <style>
+        .required {
+            color: red;
+        }
+        .error-message {
+            font-size: 0.9em;
+            color: red;
+            margin-top: 5px;
+        }
+
+    </style>
 </head>
 <body class="sb-nav-fixed">
     <nav id="top" class="sb-topnav navbar navbar-expand navbar-dark bg-dark"></nav>
@@ -41,15 +52,22 @@
         <div id="layoutSidenav_content">
             <main class="main">
                 <form action="javascript:changePassword()" class="col-sm-6">
-                    <label class="lb-form">Mật khẩu hiện tại *</label>
+                    <label class="lb-form">Mật khẩu hiện tại <span class="required">*</span></label>
                     <input id="oldpass" type="password" class="form-control">
-                    <label class="lb-form">Mật khẩu mới *</label>
+                    <div id="oldpass-error" class="error-message" style="display:none; color:red;">Mật khẩu hiện tại là bắt buộc.</div>
+
+                    <label class="lb-form">Mật khẩu mới <span class="required">*</span></label>
                     <input id="newpass" type="password" class="form-control">
-                    <label class="lb-form">Xác nhận mật khẩu mới *</label>
-                    <input id="renewpass" type="password" class="form-control"><br>
+                    <div id="newpass-error" class="error-message" style="display:none; color:red;">Mật khẩu mới là bắt buộc.</div>
+
+                    <label class="lb-form">Xác nhận mật khẩu mới <span class="required">*</span></label>
+                    <input id="renewpass" type="password" class="form-control">
+                    <div id="renewpass-error" class="error-message" style="display:none; color:red;">Xác nhận mật khẩu mới là bắt buộc.</div><br>
+
                     <button type="submit" class="btn btn-primary">CẬP NHẬT</button>
                 </form>
             </main>
+
         </div>
     </div>
 

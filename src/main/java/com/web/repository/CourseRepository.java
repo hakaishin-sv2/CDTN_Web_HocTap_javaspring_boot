@@ -1,7 +1,7 @@
 package com.web.repository;
 
 import com.web.entity.Course;
-import org.jetbrains.annotations.NotNull;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,6 +32,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     Page<Course> findByIsfreeTrue(Pageable pageable); // Phân trang cho khóa học miễn phí
     Page<Course> findByIsfreeFalse(Pageable pageable); // Phân trang cho khóa học có phí
-    @NotNull
+
     Page<Course> findAll(Pageable pageable);
 }

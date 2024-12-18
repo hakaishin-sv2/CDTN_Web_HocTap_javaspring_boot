@@ -27,6 +27,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
+
     <script src="js/menu.js"></script>
     <script src="js/user.js"></script>
     <script>
@@ -91,32 +92,41 @@
                 <div class="modal-body row">
                     <form action="javascript:addtk()" class="row">
                         <div class="col-sm-6">
-                            <label class="lb-form">Họ tên</label>
+                            <label class="lb-form">Họ tên <span style="color: red;">*</span></label>
                             <input id="fullname" class="form-control">
-                            <label class="lb-form">Số điện thoại</label>
+
+                            <label class="lb-form">Số điện thoại <span style="color: red;">*</span></label>
                             <input id="phone" class="form-control">
-                            <label class="lb-form">Email</label>
+
+                            <label class="lb-form">Email <span style="color: red;">*</span></label>
                             <input required id="email" class="form-control">
-                            <label class="lb-form">Chọn quyền</label>
+
+                            <label class="lb-form">Chọn quyền <span style="color: red;">*</span></label>
                             <select id="roleadd" class="form-control">
                                 <option value="ROLE_TEACHER">Tài khoản giảng viên</option>
                                 <option value="ROLE_ADMIN">Tài khoản admin</option>
                                 <option value="ROLE_USER">Tài khoản học viên</option>
                             </select>
                         </div>
+
                         <div class="col-sm-6">
-                            <label class="lb-form">Mật khẩu</label>
+                            <label class="lb-form">Mật khẩu <span style="color: red;">*</span></label>
                             <input required id="pass" type="password" class="form-control">
-                            <label class="lb-form">Nhắc lại mật khẩu</label>
+
+                            <label class="lb-form">Nhắc lại mật khẩu <span style="color: red;">*</span></label>
                             <input required id="repass" type="password" class="form-control">
-                            <label class="lb-form">Ảnh</label>
+
+                            <label class="lb-form">Ảnh <span style="color: red;">*</span></label>
                             <input onchange="preViewImage()" required id="chooseimg" type="file" class="form-control">
+
                             <input id="impinput" type="hidden" class="form-control">
                             <img src="" id="imgpre" style="width: 100px; margin-top: 10px; margin-bottom: 10px;">
+
                             <br>
                             <button id="btnadd" class="form-control btn btn-primary">Thêm tài khoản</button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>

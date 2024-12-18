@@ -109,3 +109,31 @@ async function checkroleAdmin() {
         window.location.replace('../login')
     }
 }
+
+// Hàm gửi dữ liệu đến API
+function sendDataToAPI() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('Token not found!');
+        window.location.replace('http://localhost:8080/login');
+        return;
+    }
+    const data = [
+        { name: "Category 1", description: "Description for Category 1" },
+    ];
+    fetch('http://localhost:8080/v1/category', {
+        method: 'POST', // Phương thức POST
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(responseData => {
+            console.log('Success:', responseData);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}

@@ -54,11 +54,11 @@ public class UserService {
 
     public TokenDto login(String username, String password) throws Exception {
         Optional<User> users = userRepository.findByUsername(username);
-        if(users.isPresent()){
-            if(users.get().getUserType().equals(UserType.GOOGLE)){
-                throw new MessageException("Hãy đăng nhập bằng google");
-            }
-        }
+//        if(users.isPresent()){
+//            if(users.get().getUserType().equals(UserType.GOOGLE)){
+//                throw new MessageException("Hãy đăng nhập bằng google");
+//            }
+//        }
         // check infor user
         checkUser(users);
         if(passwordEncoder.matches(password, users.get().getPassword())){
@@ -226,7 +226,12 @@ public class UserService {
         u.setFullName(user.getFullName());
         u.setEmail(user.getEmail());
         u.setPhone(user.getPhone());
-        u.setAvatar(user.getAvatar());
+        if(user.getAvatar()!= null){
+            u.setAvatar(user.getAvatar());
+        }else{
+            u.setAvatar(u.getAvatar());
+        }
+
         User result = userRepository.save(u);
         return u;
     }

@@ -75,7 +75,11 @@ async function saveChapter() {
             "id":document.getElementById("khoahocselectadd").value
         },
     }
-
+    var tenChapter = document.getElementById("tenchapter").value.trim();
+    if (!tenChapter) {
+        toastr.error("Vui lòng nhập tên chapter!");
+        return;
+    }
     const response = await fetch(url, {
         method: 'POST',
         headers: new Headers({

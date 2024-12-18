@@ -1,9 +1,11 @@
 package com.web.service;
 
+import com.web.entity.Answer;
 import com.web.entity.Category;
 import com.web.entity.Question;
 import com.web.enums.CategoryType;
 import com.web.exception.MessageException;
+import com.web.repository.AnswerRepository;
 import com.web.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,6 +39,33 @@ public class QuestionService {
     public List<Question> findByLesson(Long lessonId) {
         List<Question> result = questionRepository.findByLesson(lessonId);
         return result;
+    }
+
+
+
+
+
+        public void deleteQuestionAndAnswers(Long questionId) {
+
+            Optional<Question> question = questionRepository.findById(questionId);
+
+            if (question.isPresent()) {
+                // Xóa câu hỏi (các câu trả lời sẽ được xóa tự động nhờ cascade)
+                questionRepository.delete(question.get());
+            }
+        }
+    @Autowired
+    private AnswerRepository answerRepository;
+    public void deleteQuestionAndAnswers2(Long questionId) {
+        Optional<Question> question = questionRepository.findById(questionId);
+
+        if (question.isPresent()) {
+            List<Answer> answers = question.get().getAnswers();
+            for (Answer answer : answers) {
+                answerRepository.delete(answer); // Xóa từng câu trả lời
+            }
+            questionRepository.delete(question.get());
+        }
     }
 
 }

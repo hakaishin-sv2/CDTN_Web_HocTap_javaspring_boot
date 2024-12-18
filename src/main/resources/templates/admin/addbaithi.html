@@ -51,37 +51,42 @@
                     <h4>Thông tin bài thi</h4><hr>
                 </div>
                 <div class="col-sm-3">
-                    <label class="lbadd">Tên bài thi</label>
-                    <input id="tenbaithi" class="form-control">
+                    <label class="lbadd">Tên bài thi <span style="color: red;">*</span></label>
+                    <input id="tenbaithi" class="form-control" required>
+                    <div id="error-tenbaithi" class="text-danger" style="display: none;">Tên bài thi không được để trống.</div>
                 </div>
                 <div class="col-sm-3">
-                    <label class="lbadd">Thời gian giới hạn (phút)</label>
-                    <input id="limittime" type="number" value="40" class="form-control">
+                    <label class="lbadd">Thời gian giới hạn (phút) <span style="color: red;">*</span></label>
+                    <input id="limittime" type="number" value="40" class="form-control" required>
+                    <div id="error-limittime" class="text-danger" style="display: none;">Thời gian giới hạn phải lớn hơn 0.</div>
                 </div>
                 <div class="col-sm-3">
-                    <label class="lbadd">Ngày thi</label>
-                    <input id="ngaythi" type="date" class="form-control">
+                    <label class="lbadd">Ngày thi <span style="color: red;">*</span></label>
+                    <input id="ngaythi" type="date" class="form-control" required>
+                    <div id="error-ngaythi" class="text-danger" style="display: none;">Ngày thi không được để trống.</div>
                 </div>
                 <div class="col-sm-3">
-                    <label class="lbadd">Giờ thi</label>
-                    <input id="giothi" type="time" class="form-control">
+                    <label class="lbadd">Giờ thi <span style="color: red;">*</span></label>
+                    <input id="giothi" type="time" class="form-control" required>
+                    <div id="error-giothi" class="text-danger" style="display: none;">Giờ thi không được để trống.</div>
                 </div>
                 <div class="col-sm-3">
-                    <label class="lbadd">Hệ số điểm (%)</label>
-                    <input id="heso" type="number" class="form-control">
+                    <label class="lbadd">Hệ số điểm (%) <span style="color: red;">*</span></label>
+                    <input id="heso" type="number" class="form-control" required>
+                    <div id="error-heso" class="text-danger" style="display: none;">Hệ số điểm phải trong khoảng từ 0 đến 100.</div>
                 </div>
                 <div class="col-sm-12">
-                    <label class="lbadd">Khóa học</label>
-                    <select id="khoahocbaithi" class="form-control">
-                       <option value=""></option>
+                    <label class="lbadd">Khóa học <span style="color: red;">*</span></label>
+                    <select id="khoahocbaithi" class="form-control" required>
+                        <option value=""></option>
                     </select>
+                    <div id="error-khoahoc" class="text-danger" style="display: none;">Khóa học không được để trống.</div>
                 </div>
                 <div class="col-sm-12">
                     <h4 class="lbtieude">Thông tin phần thi</h4><hr>
                     <div id="listbonho">
                         <div id="listphanthidathem"> </div>
                         <div id="listphanthitam">
-                            
                         </div>
                     </div>
                     <button data-bs-toggle="modal" data-bs-target="#thembonhomodal" class="btn btn-success btnthemhinhanh"><i class="fa fa-plus"></i> Thêm phần thi</button>
@@ -90,6 +95,7 @@
                     <button onclick="saveExam()" class="btn btn-success form-control" id="btnthemdethi"><i class="fa fa-plus"></i> Thêm đề thi</button>
                 </div>
             </main>
+
         </div>
     </div>
 </body>
@@ -100,25 +106,27 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thêm phần thi</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                <h5 class="modal-title" id="exampleModalLabel">Thêm phần thi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
             <div class="modal-body row">
                 <div class="col-sm-6">
-                    <label class="lbadd">Tên phần thi</label>
+                    <label class="lbadd">Tên phần thi <span style="color: red;">*</span></label>
                     <input id="tenphanthi" class="form-control">
                 </div>
                 <div class="col-sm-6">
-                    <label class="lbadd">Danh mục</label>
+                    <label class="lbadd">Danh mục <span style="color: red;">*</span></label>
                     <select id="danhmucphanthi" class="form-control">
                     </select>
                 </div>
                 <div class="col-sm-6">
-                    <label class="lbadd">Kỹ năng</label>
+                    <label class="lbadd">Kỹ năng <span style="color: red;">*</span></label>
                     <select id="kynang" class="form-control">
-<!--                        <option value="TULUAN">Tự Luận</option>-->
-                        <option value="TRACNGHIEM" selected>Trắc Nghiệm</option>
+                        <option value="LISTENING">LISTENING</option>
+                        <option value="READING">READING</option>
                     </select>
                 </div>
-                
+
                 <label class="lbadd">Nội dung (chọn file pdf or word tư liệu )</label>
                 <div class="col-sm-4"><input type="file" class="form-control" id="chonfilennghe"></div>
                 <div class="col-sm-8"><textarea id="editor" name="content"></textarea></div>
@@ -128,6 +136,7 @@
                 <div class="col-sm-12"><button onclick="addPhanThi()" class="form-control btn btn-primary">Thêm phần thi</button></div>
             </div>
         </div>
+
     </div>
 </div>
 

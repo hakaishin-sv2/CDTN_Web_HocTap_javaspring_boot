@@ -30,6 +30,77 @@
         }
     </script>
     <style>
+        .lbform {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .inputlogin {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .inputlogin:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+
+        .success {
+            color: green;
+            font-size: 14px;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+
+
+        .divimglogin {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .divctlogin {
+            background-color: rgba(255, 255, 255, 0.8); /* Đảm bảo form không bị mờ khi đặt ảnh nền */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .inputlogin {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .divctlogin {
+            margin: auto;
+
+            padding: 30px;
+            background-color: #fff; /* Màu nền trắng cho form */
+            border-radius: 8px; /* Bo góc mềm mại */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ phía dưới */
+            max-width: 800px; /* Giới hạn chiều rộng */
+            width: 100%; /* Đảm bảo kích thước toàn màn hình */
+            transition: box-shadow 0.3s ease; /* Thêm hiệu ứng chuyển động khi hover */
+        }
+
+        .divctlogin:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Đổ bóng đậm hơn khi hover */
+        }
+
+
+
 
     </style>
 </head>
@@ -40,22 +111,34 @@
 <div class="contentmain">
     <div class="container">
         <div class="dangnhapform">
-            <div class="divimglogin">
-                <img src="image/logo_dangky.webp" alt="" >
-            </div>
-            <div class="divctlogin">
+<!--            <div class="divimglogin">-->
+<!--                <img src="image/logo_dangky.webp" alt="" style="max-width: 100%; height: auto;">-->
+<!--            </div>-->
+
+            <div class="divctlogin" style="margin-left: 20%">
                 <p class="labeldangnhap">Đăng Ký</p>
                 <form action="javascript:regis()" autocomplete="off">
+                    <!-- Các trường nhập liệu -->
                     <label class="lbform">Họ tên</label>
                     <input id="fullname" class="inputlogin">
+                    <div id="error-fullname" class="error"></div>
+
                     <label class="lbform">Email</label>
-                    <input id="email" class="inputlogin">
+                    <input id="email" class="inputlogin" onchange="checkEmail()">
+                    <div id="error-email" class="error"></div>
+
                     <label class="lbform">Số điện thoại</label>
-                    <input id="phone" class="inputlogin">
+                    <input id="phone" class="inputlogin" onchange="checkPhone()">
+                    <div id="error-phone" class="error"></div>
+
                     <label class="lbform">Mật khẩu</label>
                     <input type="password" id="password" class="inputlogin">
+                    <div id="error-password" class="error"></div>
+
                     <label class="lbform">Nhập lại mật khẩu</label>
                     <input type="password" id="repassword" class="inputlogin">
+                    <div id="error-repassword" class="error"></div>
+
                     <button class="btndangnhap">ĐĂNG KÝ</button>
                     <button type="button" onclick="window.location.href='login'" class="btndangky">ĐĂNG NHẬP</button>
                 </form>
@@ -63,6 +146,7 @@
         </div>
     </div>
 </div>
+
 
 <div id="footer"></div>
 </body>

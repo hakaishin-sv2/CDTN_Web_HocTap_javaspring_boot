@@ -1,6 +1,7 @@
 package com.web.config;
 
 import com.web.jwt.JWTConfigurer;
+import com.web.jwt.JwtAuthenticationFilter;
 import com.web.jwt.JwtTokenProvider;
 import com.web.repository.UserRepository;
 import com.web.utils.Contains;
@@ -54,13 +55,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-//            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, userRepository),UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .and()
                 .headers()
                 .and()
-//                .sessionManagement()
-//                .and()
                 .authorizeRequests()
                 .antMatchers("/api/admin/**").hasAuthority(Contains.ROLE_ADMIN)
                 .antMatchers("/api/user/**").hasAuthority(Contains.ROLE_USER)

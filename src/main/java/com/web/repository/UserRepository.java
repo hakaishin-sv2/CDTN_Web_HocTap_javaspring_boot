@@ -45,6 +45,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 
     // Lấy thong tin của các user chưa nằm trong khóa học hiện tại
-    @Query("SELECT u FROM User u WHERE u.authorities.name = 'ROLE_USER' AND u.id NOT IN (SELECT cu.user.id FROM CourseUser cu WHERE cu.course.id = :courseId)")
+    @Query("SELECT u FROM User u WHERE u.authorities.name = 'ROLE_USER' AND u.id NOT IN " +
+            "(SELECT cu.user.id FROM CourseUser cu WHERE cu.course.id = :courseId)")
     List<User> findUsersNotInCourseUserByCourseId(@Param("courseId") Long courseId);
 }

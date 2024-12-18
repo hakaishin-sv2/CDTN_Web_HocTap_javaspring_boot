@@ -143,4 +143,7 @@ public class ResultService {
         }
         return result;
     }
+    public void deleteByExamId(Long examId) {
+        resultRepository.deleteByExamId(examId);  // Phương thức này cần định nghĩa trong ResultRepository
+    }
 }

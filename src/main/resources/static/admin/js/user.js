@@ -230,20 +230,44 @@ async function loadUserTeacher() {
 
 
 async function changePassword() {
+    // Lấy thông tin từ localStorage và form
     var token = localStorage.getItem("token");
-    var oldpass = document.getElementById("oldpass").value
-    var newpass = document.getElementById("newpass").value
-    var renewpass = document.getElementById("renewpass").value
-    var url = 'http://localhost:8080/api/all/change-password';
-    if (newpass != renewpass) {
-        alert("mật khẩu mới không trùng khớp");
+    var oldpass = document.getElementById("oldpass").value;
+    var newpass = document.getElementById("newpass").value;
+    var renewpass = document.getElementById("renewpass").value;
+
+    // Ẩn các lỗi trước khi kiểm tra
+    document.getElementById("oldpass-error").style.display = "none";
+    document.getElementById("newpass-error").style.display = "none";
+    document.getElementById("renewpass-error").style.display = "none";
+
+    // Kiểm tra các trường có bị bỏ trống
+    if (!oldpass) {
+        document.getElementById("oldpass-error").style.display = "block";
         return;
     }
+    if (!newpass) {
+        document.getElementById("newpass-error").style.display = "block";
+        return;
+    }
+    if (!renewpass) {
+        document.getElementById("renewpass-error").style.display = "block";
+        return;
+    }
+
+    // Kiểm tra nếu mật khẩu mới và xác nhận mật khẩu mới không giống nhau
+    if (newpass !== renewpass) {
+        toastr.warning("Mật khẩu mới không trùng khớp.");
+        return;
+    }
+
+    // Tạo đối tượng để gửi yêu cầu
     var passw = {
         "oldPass": oldpass,
         "newPass": newpass
-    }
-    const response = await fetch(url, {
+    };
+
+    const response = await fetch('http://localhost:8080/api/all/change-password', {
         method: 'POST',
         headers: new Headers({
             'Authorization': 'Bearer ' + token,
@@ -251,18 +275,21 @@ async function changePassword() {
         }),
         body: JSON.stringify(passw)
     });
+
+    // Xử lý kết quả phản hồi
     if (response.status < 300) {
         swal({
                 title: "Thông báo",
-                text: "cập nhật mật khẩu thành công, hãy đăng nhập lại",
+                text: "Cập nhật mật khẩu thành công, hãy đăng nhập lại",
                 type: "success"
             },
             function() {
                 window.location.reload();
             });
     }
+
     if (response.status == exceptionCode) {
-        var result = await response.json()
+        var result = await response.json();
         toastr.warning(result.defaultMessage);
     }
 }

@@ -144,7 +144,10 @@ async function loadKhoaHocCuaToi() {
             <ul class="dropdown-menu dropitem" aria-labelledby="dropdownMenuButton1">
                 <li onclick="loadTaiLieuKh(${list[i].course.id})" data-bs-toggle="modal" data-bs-target="#modaltailieu"><a class="dropdown-item"><i class="fa fa-file"></i> Tài liệu</a></li>
                 <li onclick="window.location.href='baihoc?khoahoc=${list[i].course.id}'"><a class="dropdown-item" href="#"><i class="fa fa-list"></i> Bài học</a></li>
-                <li onclick="window.location.href='danhsachdethi?khoahoc=${list[i].course.id}&tenkhoahoc=${list[i].course.name}'"><a class="dropdown-item" href="#"><i class="fa fa-check-square"></i> Đề thi</a></li>
+
+                  <li onclick="window.location.href=\`danhsachdethi?khoahoc=${list[i].course.id}&tenkhoahoc=${encodeURIComponent(list[i].course.name)}\`">
+    <a class="dropdown-item" href="#"><i class="fa fa-check-square"></i> Đề thi</a>
+</li>
                 ${cc}
             </ul>
         </div>

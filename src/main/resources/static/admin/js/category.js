@@ -61,6 +61,10 @@ async function saveCategory() {
     var id = document.getElementById("idcate").value
     var catename = document.getElementById("catename").value
     var catetype = document.getElementById("catetype").value
+    if (catename.trim() === "") {
+        toastr.warning('Tên danh mục không được để trống!');
+        return;
+    }
 
     var url = 'http://localhost:8080/api/category/admin/create';
     if (id != "" && id != null) {
